@@ -6,37 +6,73 @@ document.addEventListener("DOMContentLoaded", function() {
     
 
     season.addEventListener("change", e => {
-        let racesAPI = racesURL + e.target.value;
-        let resultsAPI = resultsURL + e.target.value;
-        let qualifyingAPI = qualifyingURL + e.target.value;
+        let resultData = localStorage.getItem("results");
+        let qualifyingData = localStorage.getItem("qualifying"); 
+        let data = localStorage.getItem("races"); 
+        if (!data) {
+            getSeasonData().then(data => {
+                resultData = data[1];
+                qualifyingData = data[2];
+                racesData = data[0];
+                displayData(racesData, resultData, qualifyingData);
 
-        let racesPromise = fetch(racesAPI).then(response => response.json());
-        let resultsPromise = fetch(resultsAPI).then(response => response.json());
-        let qualifyingPromise = fetch(qualifyingAPI).then(response => response.json());
-
-        Promise.all(racesPromise ,resultsPromise , qualifyingPromise)
-        .then(resolves => {
-            const races = resolves[0];
-            const results = resolves[1];
-            const qualifying = resolves[2];
-            
-
-        })
+                localStorage.setItem("races", JSON.stringify(data[0])); 
+                localStorage,setItem("results", JSON.stringify(data[1])); 
+                localStorage.SetItem("qualifying", JSON.stringify(data[2])); 
+            })
+        }
+        else {
+            resultData = JSON.parse(localStorage("results")); 
+            qualifyingData = JSON.parse(localStorage("qualifying")); 
+            racesData = JSON.parse(localStorage("races"));
+            ddisplayData(racesData, resultData, qualifyingData);
+        }
     })
 });
-
+function getSeasonData(season) {
+    let racesPromise = fetch(racesAPI + season).then(response => response.json());
+    let resultsPromise = fetch(resultsAPI + season).then(response => response.json());
+    let qualifyingPromise = fetch(qualifyingAPI + season).then(response => response.json());
+    return Promise.all(racesPromise,resultsPromise,qualifyingPromise)
+}
 function displayData(races, results, qualifying) {
-
+    displayRaces(races);
+    displayResults(results);
+    displayQualifying(qualifying);
 }
 function displayRaces(races) {
     races.forEach(r => {
         
     });
 }
+function displayResults(results) {
+    results.forEach(r => {
+
+    });
+}
+function displayQualifying(qualifying) {
+    qualifying.forEach(q => {
+
+    });
+}
 function displaySingleRace(race) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    race,addEventListener("click", (e) => {
+    race.addEventListener("click", (e) => {
+        
+    })
+}
+function displaySingleResult(result) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    result.addEventListener("click", (e) => {
+        
+    })
+}
+function displaySingleQualifying(qualifying) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    qualifying.addEventListener("click", (e) => {
         
     })
 }
