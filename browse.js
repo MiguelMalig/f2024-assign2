@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 displayData(racesData, resultData, qualifyingData);
 
                 localStorage.setItem("races", JSON.stringify(data[0])); 
-                localStorage,setItem("results", JSON.stringify(data[1])); 
+                localStorage.setItem("results", JSON.stringify(data[1])); 
                 localStorage.SetItem("qualifying", JSON.stringify(data[2])); 
             })
         }
