@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
             resultData = JSON.parse(localStorage("results")); 
             qualifyingData = JSON.parse(localStorage("qualifying")); 
             racesData = JSON.parse(localStorage("races"));
-            ddisplayData(racesData, resultData, qualifyingData);
+            displayData(racesData, resultData, qualifyingData);
         }
     })
 });
@@ -57,7 +57,12 @@ function displayQualifying(qualifying) {
 }
 function displaySingleRace(race) {
     const tr = document.createElement("tr");
-    const td = document.createElement("td");
+    const roundtd = document.createElement("td");
+    const nametd = document.createElement("td");
+    roundtd.textContent = race.round;
+    nametd.textContent = race.name;
+    tr.appendChild(roundtd);
+    tr.appendChild(nametd);
     race.addEventListener("click", (e) => {
         
     })
@@ -71,7 +76,8 @@ function displaySingleResult(result) {
 }
 function displaySingleQualifying(qualifying) {
     const tr = document.createElement("tr");
-    const td = document.createElement("td");
+    const postd = document.createElement("td");
+    const nametd = document.createElement("td");
     qualifying.addEventListener("click", (e) => {
         
     })
