@@ -11,3 +11,15 @@
 .bronze {
     background-color: #cd7f32;
 }
+
+.results-section { min-height: 300px; }
+.divider { border-right: 1px solid #ccc; }
+.table th, .table td { vertical-align: middle; }
+.table-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}   
+.table-container .col {
+    width: 48%;
+}
