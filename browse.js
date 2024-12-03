@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 displayData(racesData, resultData, qualifyingData);
 
                 localStorage.setItem("races", JSON.stringify(data[0])); 
-                localStorage,setItem("results", JSON.stringify(data[1])); 
+                localStorage.setItem("results", JSON.stringify(data[1])); 
                 localStorage.SetItem("qualifying", JSON.stringify(data[2])); 
             })
         }
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
             resultData = JSON.parse(localStorage("results")); 
             qualifyingData = JSON.parse(localStorage("qualifying")); 
             racesData = JSON.parse(localStorage("races"));
-            ddisplayData(racesData, resultData, qualifyingData);
+            displayData(racesData, resultData, qualifyingData);
         }
     })
 });
@@ -51,13 +51,19 @@ function displayResults(results) {
     });
 }
 function displayQualifying(qualifying) {
+    // need to sort this qualifying Array by position.
     qualifying.forEach(q => {
 
     });
 }
 function displaySingleRace(race) {
     const tr = document.createElement("tr");
-    const td = document.createElement("td");
+    const roundtd = document.createElement("td");
+    const nametd = document.createElement("td");
+    roundtd.textContent = race.round;
+    nametd.textContent = race.name;
+    tr.appendChild(roundtd);
+    tr.appendChild(nametd);
     race.addEventListener("click", (e) => {
         
     })
@@ -71,7 +77,27 @@ function displaySingleResult(result) {
 }
 function displaySingleQualifying(qualifying) {
     const tr = document.createElement("tr");
-    const td = document.createElement("td");
+
+    const postd = document.createElement("td");
+    const nametd = document.createElement("td");
+    const constructortd = document.createElement("td");
+    const q1td = document.createElement("td");
+    const q2td = document.createElement("td");
+    const q3td = document.createElement("td");
+
+    postd.textContent = qualifying.position;
+    nametd.textContent = qualifying.driver.forename + " " + qualifying.driver.surname;
+    constructortd.textContent = qualifying.constructor.name;
+    q1td.textContent = qualifying.q1;
+    q2td.textContent = qualifying.q2;
+    q3td.textContent = qualifying.q3;
+
+    tr.appendChild(postd);
+    tr.appendChild(nametd);
+    tr.appendChild(constructortd);
+    tr.appendChild(q1td);
+    tr.appendChild(q2td);
+    tr.appendChild(q3td);
     qualifying.addEventListener("click", (e) => {
         
     })
