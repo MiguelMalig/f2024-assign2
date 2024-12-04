@@ -2,23 +2,53 @@ document.addEventListener("DOMContentLoaded", function() {
     const racesURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/races.php?season=";
     const resultsURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/results.php?season="
     const qualifyingURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/qualifying.php?season="
+
     const season = document.querySelector("#season");
     
+    fetch(racesURL) 
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            else {
+            return Promise.reject({
+                status: response.status,
+                statusText: response.statusText
+            })
+            }
+        })
+        .then(data => {
+            let placeholder = document.createElement("option");
+            placeholder.selected = true;
+            placeholder.disabled = true;
+            placeholder.textContent = "Select a season";
+            season.appendChild(placeholder);
+            let uniqueSeason = data.map(d => d.year).filter((year, index, array) => array.indexOf(year) === index);
+
+            uniqueSeason.forEach(u => {
+                const option = document.createElement("option");
+                option.textContent = u;
+                option.value = u;
+                season.appendChild(option);
+            })
+        })
 
     season.addEventListener("change", e => {
         let resultData = localStorage.getItem("results");
         let qualifyingData = localStorage.getItem("qualifying"); 
         let data = localStorage.getItem("races"); 
         if (!data) {
-            getSeasonData().then(data => {
+            getSeasonData(e, racesURL, resultsURL, qualifyingURL).then(data => {
+                console.log(data);
                 resultData = data[1];
                 qualifyingData = data[2];
                 racesData = data[0];
+                console.log(racesData);
                 displayData(racesData, resultData, qualifyingData);
 
                 localStorage.setItem("races", JSON.stringify(data[0])); 
                 localStorage.setItem("results", JSON.stringify(data[1])); 
-                localStorage.SetItem("qualifying", JSON.stringify(data[2])); 
+                localStorage.setItem("qualifying", JSON.stringify(data[2])); 
             })
         }
         else {
@@ -29,11 +59,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     })
 });
-function getSeasonData(season) {
-    let racesPromise = fetch(racesAPI + season).then(response => response.json());
-    let resultsPromise = fetch(resultsAPI + season).then(response => response.json());
-    let qualifyingPromise = fetch(qualifyingAPI + season).then(response => response.json());
-    return Promise.all(racesPromise,resultsPromise,qualifyingPromise)
+function getSeasonData(season, racesAPI, resultsAPI, qualifyingAPI) {
+    let racesPromise = fetch(racesAPI + season.target.value).then(response => response.json());
+    let resultsPromise = fetch(resultsAPI + season.target.value).then(response => response.json());
+    let qualifyingPromise = fetch(qualifyingAPI + season.target.value).then(response => response.json());
+
+    return Promise.all([racesPromise,resultsPromise,qualifyingPromise]);
 }
 function displayData(races, results, qualifying) {
     displayRaces(races);
@@ -101,4 +132,7 @@ function displaySingleQualifying(qualifying) {
     qualifying.addEventListener("click", (e) => {
         
     })
+}
+function ifEqual(season,) {
+
 }
