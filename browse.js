@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const season = document.querySelector("#season");
     
+    console.log(season);
     fetch(racesURL) 
         .then(response => {
             if (response.ok) {
@@ -34,6 +35,42 @@ document.addEventListener("DOMContentLoaded", function() {
         })
 
     season.addEventListener("change", e => {
+        let seasonParagraph = document.querySelector(".leftside p");
+        let raceCaption = document.querySelector(".leftside h4");
+        raceCaption.innerHTML = e.target.value + " Races";
+        seasonParagraph.remove();
+        season.remove();
+
+        let raceTable = document.querySelector(".leftside");
+        const table = document.createElement("table");
+        table.classList.add("table", "table-sm");
+
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+
+        const raceth1 = document.createElement("th");
+        const raceth2 = document.createElement("th");
+        const raceth3 = document.createElement("th");
+
+        raceth1.textContent = "Round";
+        raceth2.textContent = "Name";
+        raceth3.textContent = "";
+
+        headerRow.appendChild(raceth1);
+        headerRow.appendChild(raceth2);
+        headerRow.appendChild(raceth3);
+        // Set the headers of the table.
+        thead.appendChild(headerRow);
+
+        const tbody = document.createElement("tbody");
+
+ 
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        raceTable.appendChild(table);
+
+
+
         let resultData = localStorage.getItem("results");
         let qualifyingData = localStorage.getItem("qualifying"); 
         let data = localStorage.getItem("races"); 
@@ -52,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function() {
             })
         }
         else {
-            resultData = JSON.parse(localStorage("results")); 
-            qualifyingData = JSON.parse(localStorage("qualifying")); 
-            racesData = JSON.parse(localStorage("races"));
+            resultData = JSON.parse(localStorage.getItem("results")); 
+            qualifyingData = JSON.parse(localStorage.getItem("qualifying")); 
+            racesData = JSON.parse(localStorage.getItem("races"));
             displayData(racesData, resultData, qualifyingData);
         }
     })
@@ -73,7 +110,7 @@ function displayData(races, results, qualifying) {
 }
 function displayRaces(races) {
     races.forEach(r => {
-        
+        displaySingleRace(r);
     });
 }
 function displayResults(results) {
@@ -88,15 +125,69 @@ function displayQualifying(qualifying) {
     });
 }
 function displaySingleRace(race) {
+    const tbody = document.querySelector(".table tbody");
     const tr = document.createElement("tr");
     const roundtd = document.createElement("td");
     const nametd = document.createElement("td");
+    const buttontd = document.createElement("td");
+    const button = document.createElement("button");
+    button.classList.add("btn", "btn-sm", "btn-outline-primary");
+    button.textContent = "Results";
+    button.value = race.year;
+    button.racename = race.name;
+    button.round = race.round;
+    button.circuit = race.circuit.name;
+    button.date = race.date;
+    button.url = race.url;
     roundtd.textContent = race.round;
     nametd.textContent = race.name;
+
+    buttontd.appendChild(button);
+
     tr.appendChild(roundtd);
     tr.appendChild(nametd);
-    race.addEventListener("click", (e) => {
-        
+    tr.appendChild(buttontd);
+    tbody.appendChild(tr);
+    button.addEventListener("click", (e) => {
+        if (!document.querySelector(".row .rightside")) {
+            console.log(document.querySelector(".row .rightside"));
+            console.log("if invoke");
+            const row = document.querySelector(".row");
+
+            const divmain = document.createElement("div");
+            const h4 = document.createElement("h4");
+            const p = document.createElement("p");
+            const strong = document.createElement("strong");
+
+            divmain.classList.add("col-md-8", "text-center", "rightside");
+            h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
+            strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
+            p.appendChild(strong);
+
+            divmain.appendChild(h4);
+            divmain.appendChild(p);
+            row.appendChild(divmain);
+        }
+        else {
+            console.log("Else invoke");
+            const divmain = document.querySelector(".rightside");
+            divmain.replaceChildren();
+
+            const row = document.querySelector(".row");
+
+            const h4 = document.createElement("h4");
+            const p = document.createElement("p");
+            const strong = document.createElement("strong");
+
+            divmain.classList.add("col-md-8", "text-center", "rightside");
+            h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
+            strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
+            p.appendChild(strong);
+
+            divmain.appendChild(h4);
+            divmain.appendChild(p);
+            row.appendChild(divmain);
+        }
     })
 }
 function displaySingleResult(result) {
@@ -122,9 +213,9 @@ function displaySingleResult(result) {
     tr.appendChild(roundtd);
     tr.appendChild(lapstd);
     tr.appendChild(pointstd);
-    result.addEventListener("click", (e) => {
+    // result.addEventListener("click", (e) => {
         
-    })
+    // })
 }
 function displaySingleQualifying(qualifying) {
     const tr = document.createElement("tr");
@@ -149,9 +240,9 @@ function displaySingleQualifying(qualifying) {
     tr.appendChild(q1td);
     tr.appendChild(q2td);
     tr.appendChild(q3td);
-    qualifying.addEventListener("click", (e) => {
+    // qualifying.addEventListener("click", (e) => {
         
-    })
+    // })
 }
 function ifEqual(season,) {
 
