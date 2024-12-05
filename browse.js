@@ -101,7 +101,27 @@ function displaySingleRace(race) {
 }
 function displaySingleResult(result) {
     const tr = document.createElement("tr");
-    const td = document.createElement("td");
+
+    const postd = document.createElement("td");
+    const nametd = document.createElement("td");
+    const constructortd = document.createElement("td");
+    const roundtd = document.createElement("td");
+    const lapstd = document.createElement("td");
+    const pointstd = document.createElement("td");
+
+    postd.textContent = result.position;
+    nametd.textContent = result.driver.forename + " " + result.driver.surname;
+    constructortd.textContent = result.constructor.name;
+    roundtd.textContent = result.race.round;
+    lapstd.textContent = result.laps;
+    pointstd = result.points;
+
+    tr.appendChild(postd);
+    tr.appendChild(nametd);
+    tr.appendChild(constructortd);
+    tr.appendChild(roundtd);
+    tr.appendChild(lapstd);
+    tr.appendChild(pointstd);
     result.addEventListener("click", (e) => {
         
     })
