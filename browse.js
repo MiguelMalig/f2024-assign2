@@ -23,41 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 
     season.addEventListener("change", e => {
-        let seasonParagraph = document.querySelector(".leftside p");
-        let raceCaption = document.querySelector(".leftside h4");
-        raceCaption.innerHTML = e.target.value + " Races";
-        seasonParagraph.remove();
-        season.remove();
-
-        let raceTable = document.querySelector(".leftside");
-        const table = document.createElement("table");
-        table.classList.add("table", "table-sm");
-
-        const thead = document.createElement("thead");
-        const headerRow = document.createElement("tr");
-
-        const raceth1 = document.createElement("th");
-        const raceth2 = document.createElement("th");
-        const raceth3 = document.createElement("th");
-
-        raceth1.textContent = "Round";
-        raceth2.textContent = "Name";
-        raceth3.textContent = "";
-
-        headerRow.appendChild(raceth1);
-        headerRow.appendChild(raceth2);
-        headerRow.appendChild(raceth3);
-        // Set the headers of the table.
-        thead.appendChild(headerRow);
-
-        const tbody = document.createElement("tbody");
-
- 
-        table.appendChild(thead);
-        table.appendChild(tbody);
-        raceTable.appendChild(table);
-
-
+        listRaces(e, season);
 
         let resultData = localStorage.getItem("results" + e.target.value);
         let qualifyingData = localStorage.getItem("qualifying" + e.target.value); 
@@ -155,8 +121,9 @@ function displaySingleRace(race) {
             divmain.appendChild(h4);
             divmain.appendChild(p);
             row.appendChild(divmain);
-
-            displaySingleQualifying();
+            // display table and headers for table corresponding to qualifying.
+            qualifyingHeaderTable();
+            
         }
         else {
             console.log("Else invoke");
@@ -177,8 +144,8 @@ function displaySingleRace(race) {
             divmain.appendChild(h4);
             divmain.appendChild(p);
             row.appendChild(divmain);
-
-            displaySingleQualifying(qualifyingData);
+            // display table and headers for table corresponding to qualifying.
+            qualifyingHeaderTable();
         }
     })
 }
@@ -225,22 +192,39 @@ function displaySingleQualifying(qualifying) {
     const qualifyingTable = document.createElement('table')
     qualifyingTable.classList.add('table', 'table-sm');
 
-    const thead = document.createElement('thead');
+    // * Line 229 is not needed, ill be doing adding this element much earlier in the code and its placement here is not correct.
+    // const thead = document.createElement('thead');
     const trHead = document.createElement('tr');
 
-    const posthd = document.createElement("th");
-    const namehd = document.createElement("th");
-    const constructorhd = document.createElement("th");
-    const q1hd = document.createElement("th");
-    const q2hd = document.createElement("th");
-    const q3hd = document.createElement("th");
+    // * Line 232 to 238 is supposed to be td, ill just be hardcoding the headers much earlier in the code and its placement here is not correct.
+    // const posthd = document.createElement("th");
+    // const namehd = document.createElement("th");
+    // const constructorhd = document.createElement("th");
+    // const q1hd = document.createElement("th");
+    // const q2hd = document.createElement("th");
+    // const q3hd = document.createElement("th");
+
+    const postd = document.createElement("td");
+    const nametd = document.createElement("td");
+    const constructortd = document.createElement("td");
+    const q1td = document.createElement("td");
+    const q2td = document.createElement("td");
+    const q3td = document.createElement("td");
     
-    posthd.textContent = "Pos";
-    namehd.textContent = "Name";
-    constructorhd.textContent = "Const";
-    q1hd.textContent = "Q1";
-    q2hd.textContent = "Q2";
-    q3hd.textContent = "Q3";
+    // * Line 248 to 253 is also needed, same argument as notes above.
+    // posthd.textContent = "Pos";
+    // namehd.textContent = "Name";
+    // constructorhd.textContent = "Const";
+    // q1hd.textContent = "Q1";
+    // q2hd.textContent = "Q2";
+    // q3hd.textContent = "Q3";
+
+    postd.textContent = qualifying.position;
+    nametd.textContent = qualifying.driver.forename + " " + qualifying.driver.surname;
+    constructortd.textContent = qualifying.constructor.name;
+    q1td.textContent = qualifying.q1;
+    q2td.textContent = qualifying.q2;
+    q3td.textContent = qualifying.q3;
 
     trHead.appendChild(posthd);
     trHead.appendChild(namehd);
@@ -249,14 +233,14 @@ function displaySingleQualifying(qualifying) {
     trHead.appendChild(q2hd);
     trHead.appendChild(q3hd);
 
-    thead.appendChild(trHead);
-    qualifyingTable.appendChild(thead);
+    // thead.appendChild(trHead);
+    // qualifyingTable.appendChild(thead);
 
-    divColumn.appendChild(qualifyingTable);
-    divTableContainer.appendChild(divColumn);
+    // divColumn.appendChild(qualifyingTable);
+    // divTableContainer.appendChild(divColumn);
 //Finally put all table header things on the table..
-    const resultsDiv = document.querySelector("div .col-md-8");
-    resultsDiv.appendChild(divTableContainer); 
+    // const resultsDiv = document.querySelector("div .col-md-8");
+    // resultsDiv.appendChild(divTableContainer); 
     
 
 
@@ -294,6 +278,87 @@ function displaySingleQualifying(qualifying) {
 
     */
 }
-function ifEqual(season,) {
+function listRaces(e, season) {
+    let seasonParagraph = document.querySelector(".leftside p");
+        let raceCaption = document.querySelector(".leftside h4");
+        raceCaption.innerHTML = e.target.value + " Races";
+        seasonParagraph.remove();
+        season.remove();
 
+        let raceTable = document.querySelector(".leftside");
+        const table = document.createElement("table");
+        table.classList.add("table", "table-sm");
+
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+
+        const raceth1 = document.createElement("th");
+        const raceth2 = document.createElement("th");
+        const raceth3 = document.createElement("th");
+
+        raceth1.textContent = "Round";
+        raceth2.textContent = "Name";
+        raceth3.textContent = "";
+
+        headerRow.appendChild(raceth1);
+        headerRow.appendChild(raceth2);
+        headerRow.appendChild(raceth3);
+        // Set the headers of the table.
+        thead.appendChild(headerRow);
+
+        const tbody = document.createElement("tbody");
+
+ 
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        raceTable.appendChild(table);
+}
+function qualifyingHeaderTable() {
+    const divTableContainer = document.createElement('div')
+    divTableContainer.classList.add('table-container');
+    
+    const divColumn = document.createElement('div')
+    divColumn.classList.add('col');
+
+    const qualifyingTitle = document.createElement('h5')
+    qualifyingTitle.textContent = "Qualifying";
+
+    divColumn.append(qualifyingTitle);
+
+    const qualifyingTable = document.createElement('table')
+    qualifyingTable.classList.add('table', 'table-sm');
+
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+
+    const posthd = document.createElement("th");
+    const namehd = document.createElement("th");
+    const constructorhd = document.createElement("th");
+    const q1hd = document.createElement("th");
+    const q2hd = document.createElement("th");
+    const q3hd = document.createElement("th");
+
+    posthd.textContent = "Pos";
+    namehd.textContent = "Name";
+    constructorhd.textContent = "Const";
+    q1hd.textContent = "Q1";
+    q2hd.textContent = "Q2";
+    q3hd.textContent = "Q3";
+
+
+    trHead.appendChild(posthd);
+    trHead.appendChild(namehd);
+    trHead.appendChild(constructorhd);
+    trHead.appendChild(q1hd);
+    trHead.appendChild(q2hd);
+    trHead.appendChild(q3hd);
+
+    thead.appendChild(trHead);
+    qualifyingTable.appendChild(thead);
+
+    divColumn.appendChild(qualifyingTable);
+    divTableContainer.appendChild(divColumn);
+
+    const resultsDiv = document.querySelector("div .col-md-8");
+    resultsDiv.appendChild(divTableContainer); 
 }
