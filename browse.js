@@ -6,33 +6,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const season = document.querySelector("#season");
     
     console.log(season);
-    fetch(racesURL) 
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            else {
-            return Promise.reject({
-                status: response.status,
-                statusText: response.statusText
-            })
-            }
-        })
-        .then(data => {
-            let placeholder = document.createElement("option");
-            placeholder.selected = true;
-            placeholder.disabled = true;
-            placeholder.textContent = "Select a season";
-            season.appendChild(placeholder);
-            let uniqueSeason = data.map(d => d.year).filter((year, index, array) => array.indexOf(year) === index);
 
-            uniqueSeason.forEach(u => {
-                const option = document.createElement("option");
-                option.textContent = u;
-                option.value = u;
-                season.appendChild(option);
-            })
-        })
+    let placeholder = document.createElement("option");
+    placeholder.selected = true;
+    placeholder.disabled = true;
+    placeholder.textContent = "Select a season";
+    season.appendChild(placeholder);
+    
+    let uniqueSeason = [2020,2021,2022,2023];
+
+    uniqueSeason.forEach(u => {
+        const option = document.createElement("option");
+        option.textContent = u;
+        option.value = u;
+        season.appendChild(option);
+    })
 
     season.addEventListener("change", e => {
         let seasonParagraph = document.querySelector(".leftside p");
@@ -71,10 +59,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-        let resultData = localStorage.getItem("results");
-        let qualifyingData = localStorage.getItem("qualifying"); 
-        let data = localStorage.getItem("races"); 
-        if (!data) {
+        let resultData = localStorage.getItem("results" + e.target.value);
+        let qualifyingData = localStorage.getItem("qualifying" + e.target.value); 
+        let data = localStorage.getItem("races" + e.target.value); 
+        if (!data) { // if localStorage doesn't exist
             getSeasonData(e, racesURL, resultsURL, qualifyingURL).then(data => {
                 console.log(data);
                 resultData = data[1];
@@ -83,15 +71,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log(racesData);
                 displayData(racesData, resultData, qualifyingData);
 
-                localStorage.setItem("races", JSON.stringify(data[0])); 
-                localStorage.setItem("results", JSON.stringify(data[1])); 
-                localStorage.setItem("qualifying", JSON.stringify(data[2])); 
+                localStorage.setItem("races" + e.target.value, JSON.stringify(data[0])); 
+                localStorage.setItem("results" + e.target.value, JSON.stringify(data[1])); 
+                localStorage.setItem("qualifying" + e.target.value, JSON.stringify(data[2])); 
             })
         }
-        else {
-            resultData = JSON.parse(localStorage.getItem("results")); 
-            qualifyingData = JSON.parse(localStorage.getItem("qualifying")); 
-            racesData = JSON.parse(localStorage.getItem("races"));
+        else { // if it exists, grab data from localStorage
+            resultData = JSON.parse(localStorage.getItem("results" + e.target.value)); 
+            qualifyingData = JSON.parse(localStorage.getItem("qualifying" + e.target.value)); 
+            racesData = JSON.parse(localStorage.getItem("races" + e.target.value));
             displayData(racesData, resultData, qualifyingData);
         }
     })
