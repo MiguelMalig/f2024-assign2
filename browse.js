@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
             resultData = JSON.parse(localStorage.getItem("results" + e.target.value)); 
             qualifyingData = JSON.parse(localStorage.getItem("qualifying" + e.target.value)); 
             racesData = JSON.parse(localStorage.getItem("races" + e.target.value));
-            displayData(racesData, resultData, qualifyingData);
+            displayRaces(racesData, resultData, qualifyingData);
         }
     })
 });
@@ -57,28 +57,30 @@ function getSeasonData(season, racesAPI, resultsAPI, qualifyingAPI) {
 
     return Promise.all([racesPromise,resultsPromise,qualifyingPromise]);
 }
+function displayRaces(races, results, qualifying) {
+    displayData(races, results, qualifying);
+}
 function displayData(races, results, qualifying) {
-    displayRaces(races);
-    displayResults(results);
-    displayQualifying(qualifying);
-}
-function displayRaces(races) {
     races.forEach(r => {
-        displaySingleRace(r);
+        displaySingleRace(r, results, qualifying);
     });
 }
-function displayResults(results) {
+function displayResults(results, race) {
     results.forEach(r => {
-
+        if (race.target.racename === r.race.name) {
+            displaySingleResult(r);
+        }
     });
 }
-function displayQualifying(qualifying) {
+function displayQualifying(qualifying, race) {
     // need to sort this qualifying Array by position.
     qualifying.forEach(q => {
-
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
     });
 }
-function displaySingleRace(race) {
+function displaySingleRace(race, results, qualifying) {
     const tbody = document.querySelector(".table tbody");
     const tr = document.createElement("tr");
     const roundtd = document.createElement("td");
@@ -103,53 +105,14 @@ function displaySingleRace(race) {
     tr.appendChild(buttontd);
     tbody.appendChild(tr);
     button.addEventListener("click", (e) => {
-        if (!document.querySelector(".row .rightside")) {
-            console.log(document.querySelector(".row .rightside"));
-            console.log("if invoke");
-            const row = document.querySelector(".row");
-
-            const divmain = document.createElement("div");
-            const h4 = document.createElement("h4");
-            const p = document.createElement("p");
-            const strong = document.createElement("strong");
-
-            divmain.classList.add("col-md-8", "text-center", "rightside");
-            h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
-            strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
-            p.appendChild(strong);
-
-            divmain.appendChild(h4);
-            divmain.appendChild(p);
-            row.appendChild(divmain);
-            // display table and headers for table corresponding to qualifying.
-            qualifyingHeaderTable();
-            
-        }
-        else {
-            console.log("Else invoke");
-            const divmain = document.querySelector(".rightside");
-            divmain.replaceChildren();
-
-            const row = document.querySelector(".row");
-
-            const h4 = document.createElement("h4");
-            const p = document.createElement("p");
-            const strong = document.createElement("strong");
-
-            divmain.classList.add("col-md-8", "text-center", "rightside");
-            h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
-            strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
-            p.appendChild(strong);
-
-            divmain.appendChild(h4);
-            divmain.appendChild(p);
-            row.appendChild(divmain);
-            // display table and headers for table corresponding to qualifying.
-            qualifyingHeaderTable();
-        }
+        headerRaceData(e);
+        
+        displayResults(results, e);
+        displayQualifying(qualifying, e);
     })
 }
 function displaySingleResult(result) {
+    const tbody = document.querySelector(".resulttable tbody");
     const tr = document.createElement("tr");
 
     const postd = document.createElement("td");
@@ -164,7 +127,7 @@ function displaySingleResult(result) {
     constructortd.textContent = result.constructor.name;
     roundtd.textContent = result.race.round;
     lapstd.textContent = result.laps;
-    pointstd = result.points;
+    pointstd.textContent = result.points;
 
     tr.appendChild(postd);
     tr.appendChild(nametd);
@@ -172,37 +135,15 @@ function displaySingleResult(result) {
     tr.appendChild(roundtd);
     tr.appendChild(lapstd);
     tr.appendChild(pointstd);
+
+    tbody.appendChild(tr);
     // result.addEventListener("click", (e) => {
         
     // })
 }
 function displaySingleQualifying(qualifying) {
-    //Table head
-    const divTableContainer = document.createElement('div')
-    divTableContainer.classList.add('table-container');
-    
-    const divColumn = document.createElement('div')
-    divColumn.classList.add('col');
-
-    const qualifyingTitle = document.createElement('h5')
-    qualifyingTitle.textContent = "Qualifying";
-
-    divColumn.append(qualifyingTitle);
-
-    const qualifyingTable = document.createElement('table')
-    qualifyingTable.classList.add('table', 'table-sm');
-
-    // * Line 229 is not needed, ill be doing adding this element much earlier in the code and its placement here is not correct.
-    // const thead = document.createElement('thead');
+    const tbody = document.querySelector(".qualifytable tbody");
     const trHead = document.createElement('tr');
-
-    // * Line 232 to 238 is supposed to be td, ill just be hardcoding the headers much earlier in the code and its placement here is not correct.
-    // const posthd = document.createElement("th");
-    // const namehd = document.createElement("th");
-    // const constructorhd = document.createElement("th");
-    // const q1hd = document.createElement("th");
-    // const q2hd = document.createElement("th");
-    // const q3hd = document.createElement("th");
 
     const postd = document.createElement("td");
     const nametd = document.createElement("td");
@@ -210,14 +151,6 @@ function displaySingleQualifying(qualifying) {
     const q1td = document.createElement("td");
     const q2td = document.createElement("td");
     const q3td = document.createElement("td");
-    
-    // * Line 248 to 253 is also needed, same argument as notes above.
-    // posthd.textContent = "Pos";
-    // namehd.textContent = "Name";
-    // constructorhd.textContent = "Const";
-    // q1hd.textContent = "Q1";
-    // q2hd.textContent = "Q2";
-    // q3hd.textContent = "Q3";
 
     postd.textContent = qualifying.position;
     nametd.textContent = qualifying.driver.forename + " " + qualifying.driver.surname;
@@ -226,24 +159,14 @@ function displaySingleQualifying(qualifying) {
     q2td.textContent = qualifying.q2;
     q3td.textContent = qualifying.q3;
 
-    trHead.appendChild(posthd);
-    trHead.appendChild(namehd);
-    trHead.appendChild(constructorhd);
-    trHead.appendChild(q1hd);
-    trHead.appendChild(q2hd);
-    trHead.appendChild(q3hd);
+    trHead.appendChild(postd);
+    trHead.appendChild(nametd);
+    trHead.appendChild(constructortd);
+    trHead.appendChild(q1td);
+    trHead.appendChild(q2td);
+    trHead.appendChild(q3td);
 
-    // thead.appendChild(trHead);
-    // qualifyingTable.appendChild(thead);
-
-    // divColumn.appendChild(qualifyingTable);
-    // divTableContainer.appendChild(divColumn);
-//Finally put all table header things on the table..
-    // const resultsDiv = document.querySelector("div .col-md-8");
-    // resultsDiv.appendChild(divTableContainer); 
-    
-
-
+    tbody.appendChild(trHead);
 /*
         
         
@@ -314,8 +237,8 @@ function listRaces(e, season) {
         raceTable.appendChild(table);
 }
 function qualifyingHeaderTable() {
-    const divTableContainer = document.createElement('div')
-    divTableContainer.classList.add('table-container');
+    const divTableContainer = document.createElement('div');
+    divTableContainer.classList.add('table-container', 'mainhubTable');
     
     const divColumn = document.createElement('div')
     divColumn.classList.add('col');
@@ -326,7 +249,7 @@ function qualifyingHeaderTable() {
     divColumn.append(qualifyingTitle);
 
     const qualifyingTable = document.createElement('table')
-    qualifyingTable.classList.add('table', 'table-sm');
+    qualifyingTable.classList.add('table', 'table-sm', 'qualifytable');
 
     const thead = document.createElement('thead');
     const trHead = document.createElement('tr');
@@ -337,6 +260,8 @@ function qualifyingHeaderTable() {
     const q1hd = document.createElement("th");
     const q2hd = document.createElement("th");
     const q3hd = document.createElement("th");
+
+    const tbody = document.createElement("tbody");
 
     posthd.textContent = "Pos";
     namehd.textContent = "Name";
@@ -355,10 +280,108 @@ function qualifyingHeaderTable() {
 
     thead.appendChild(trHead);
     qualifyingTable.appendChild(thead);
+    qualifyingTable.appendChild(tbody);
 
     divColumn.appendChild(qualifyingTable);
     divTableContainer.appendChild(divColumn);
 
     const resultsDiv = document.querySelector("div .col-md-8");
     resultsDiv.appendChild(divTableContainer); 
+}
+function resultsHeaderTable() {
+    const divTableContainer = document.querySelector('.mainhubTable');
+
+    const divColumn = document.createElement('div')
+    divColumn.classList.add('col');
+
+    const resultsTitle = document.createElement('h5')
+    resultsTitle.textContent = "Results";
+
+    divColumn.append(resultsTitle);
+
+    const resultTable = document.createElement('table')
+    resultTable.classList.add('table', 'table-sm', 'mt-3', 'resulttable');
+
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+
+    const posthd = document.createElement("th");
+    const namehd = document.createElement("th");
+    const constructorhd = document.createElement("th");
+    const round = document.createElement("th");
+    const laps = document.createElement("th");
+    const points = document.createElement("th");
+
+    const tbody = document.createElement("tbody");
+
+    posthd.textContent = "Pos";
+    namehd.textContent = "Name";
+    constructorhd.textContent = "Const";
+    round.textContent = "Rd";
+    laps.textContent = "Laps";
+    points.textContent = "Pts";
+
+    trHead.appendChild(posthd);
+    trHead.appendChild(namehd);
+    trHead.appendChild(constructorhd);
+    trHead.appendChild(round);
+    trHead.appendChild(laps);
+    trHead.appendChild(points);
+
+    thead.appendChild(trHead);
+    resultTable.appendChild(thead);
+    resultTable.appendChild(tbody);
+
+    divColumn.appendChild(resultTable);
+    divTableContainer.appendChild(divColumn);
+
+    const resultsDiv = document.querySelector("div .col-md-8");
+    resultsDiv.appendChild(divTableContainer); 
+}
+function headerRaceData(e) {
+    if (!document.querySelector(".row .rightside")) {
+        console.log(document.querySelector(".row .rightside"));
+        console.log("if invoke");
+        const row = document.querySelector(".row");
+
+        const divmain = document.createElement("div");
+        const h4 = document.createElement("h4");
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+
+        divmain.classList.add("col-md-8", "text-center", "rightside");
+        h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
+        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
+        p.appendChild(strong);
+
+        divmain.appendChild(h4);
+        divmain.appendChild(p);
+        row.appendChild(divmain);
+        // display table and headers for table corresponding to qualifying.
+        qualifyingHeaderTable();
+        resultsHeaderTable();
+    }
+    else {
+        console.log("Else invoke");
+        const divmain = document.querySelector(".rightside");
+        divmain.replaceChildren();
+
+        const row = document.querySelector(".row");
+
+        const h4 = document.createElement("h4");
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+
+        divmain.classList.add("col-md-8", "text-center", "rightside");
+        h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
+        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
+        p.appendChild(strong);
+
+        divmain.appendChild(h4);
+        divmain.appendChild(p);
+        row.appendChild(divmain);
+        // display table and headers for table corresponding to qualifying.
+        qualifyingHeaderTable();
+        resultsHeaderTable();
+    }
 }
