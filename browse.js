@@ -105,7 +105,7 @@ function displaySingleRace(race, results, qualifying) {
     tr.appendChild(buttontd);
     tbody.appendChild(tr);
     button.addEventListener("click", (e) => {
-        headerRaceData(e);
+        headerRaceData(e, results, qualifying);
         
         displayResults(results, e);
         displayQualifying(qualifying, e);
@@ -207,7 +207,7 @@ function listRaces(e, season) {
         table.appendChild(tbody);
         raceTable.appendChild(table);
 }
-function qualifyingHeaderTable() {
+function qualifyingHeaderTable(qualifying, event) {
     const divTableContainer = document.createElement('div');
     divTableContainer.classList.add('table-container', 'mainhubTable');
     
@@ -258,6 +258,16 @@ function qualifyingHeaderTable() {
 
     const resultsDiv = document.querySelector("div .col-md-8");
     resultsDiv.appendChild(divTableContainer); 
+
+    trHead.addEventListener("click", (e) => {
+        console.log(e);
+        if (e.target.textContent === "Name") {
+            const tbody = document.querySelector(".qualifytable tbody");
+            tbody.replaceChildren();
+            sortByName(qualifying, event);
+
+        }
+    });
 }
 function resultsHeaderTable() {
     const divTableContainer = document.querySelector('.mainhubTable');
@@ -309,7 +319,7 @@ function resultsHeaderTable() {
     const resultsDiv = document.querySelector("div .col-md-8");
     resultsDiv.appendChild(divTableContainer); 
 }
-function headerRaceData(e) {
+function headerRaceData(e, results, qualifying) {
     if (!document.querySelector(".row .rightside")) {
         console.log(document.querySelector(".row .rightside"));
         console.log("if invoke");
@@ -329,8 +339,9 @@ function headerRaceData(e) {
         divmain.appendChild(p);
         row.appendChild(divmain);
         // display table and headers for table corresponding to qualifying.
-        qualifyingHeaderTable();
+        qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable();
+
     }
     else {
         console.log("Else invoke");
@@ -352,7 +363,15 @@ function headerRaceData(e) {
         divmain.appendChild(p);
         row.appendChild(divmain);
         // display table and headers for table corresponding to qualifying.
-        qualifyingHeaderTable();
+        qualifyingHeaderTable(qualifying);
         resultsHeaderTable();
     }
+}
+function sortByName(qualifying, race) {
+    
+    qualifying.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
 }
