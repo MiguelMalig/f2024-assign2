@@ -167,39 +167,10 @@ function displaySingleQualifying(qualifying) {
     trHead.appendChild(q3td);
 
     tbody.appendChild(trHead);
-/*
-        
-        
-        
-        
-        //body
-        const tr = document.createElement("tr");
-        const postd = document.createElement("td");
-        const nametd = document.createElement("td");
-        const constructortd = document.createElement("td");
-        const q1td = document.createElement("td");
-        const q2td = document.createElement("td");
-        const q3td = document.createElement("td");
-
-    //actual data into textContent
-    postd.textContent = qualifying.position;
-    nametd.textContent = qualifying.driver.forename + " " + qualifying.driver.surname;
-    constructortd.textContent = qualifying.constructor.name;
-    q1td.textContent = qualifying.q1;
-    q2td.textContent = qualifying.q2;
-    q3td.textContent = qualifying.q3;
-
-    tr.appendChild(postd);
-    tr.appendChild(nametd);
-    tr.appendChild(constructortd);
-    tr.appendChild(q1td);
-    tr.appendChild(q2td);
-    tr.appendChild(q3td);
     // qualifying.addEventListener("click", (e) => {
         
     // })
 
-    */
 }
 function listRaces(e, season) {
     let seasonParagraph = document.querySelector(".leftside p");
