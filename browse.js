@@ -241,7 +241,8 @@ function qualifyingHeaderTable(qualifying, event) {
     q2hd.textContent = "Q2";
     q3hd.textContent = "Q3";
 
-
+    trHead.style.cursor = "pointer";
+    
     trHead.appendChild(posthd);
     trHead.appendChild(namehd);
     trHead.appendChild(constructorhd);
@@ -260,16 +261,40 @@ function qualifyingHeaderTable(qualifying, event) {
     resultsDiv.appendChild(divTableContainer); 
 
     trHead.addEventListener("click", (e) => {
-        console.log(e);
+        console.log(e.target.textContent);
         if (e.target.textContent === "Name") {
             const tbody = document.querySelector(".qualifytable tbody");
             tbody.replaceChildren();
             sortByName(qualifying, event);
-
         }
+        if (e.target.textContent === "Const") {
+            tbody.replaceChildren();
+            sortByConst(qualifying, event);
+        }
+        if (e.target.textContent === "Pos") {
+            const tbody = document.querySelector(".qualifytable tbody");
+            tbody.replaceChildren();
+            sortByPos(qualifying, event);
+        }
+        if (e.target.textContent === "Q1") {
+            const tbody = document.querySelector(".qualifytable tbody");
+            tbody.replaceChildren();
+            sortByQ1(qualifying, event);
+        }
+        if (e.target.textContent === "Q2") {
+            const tbody = document.querySelector(".qualifytable tbody");
+            tbody.replaceChildren();
+            sortByQ2(qualifying, event);
+        }
+        if (e.target.textContent === "Q3") {
+            const tbody = document.querySelector(".qualifytable tbody");
+            tbody.replaceChildren();
+            sortByQ3(qualifying, event);
+        }
+
     });
 }
-function resultsHeaderTable() {
+function resultsHeaderTable(results, event) {
     const divTableContainer = document.querySelector('.mainhubTable');
 
     const divColumn = document.createElement('div')
@@ -302,6 +327,8 @@ function resultsHeaderTable() {
     laps.textContent = "Laps";
     points.textContent = "Pts";
 
+    trHead.style.cursor = "pointer";
+
     trHead.appendChild(posthd);
     trHead.appendChild(namehd);
     trHead.appendChild(constructorhd);
@@ -318,6 +345,36 @@ function resultsHeaderTable() {
 
     const resultsDiv = document.querySelector("div .col-md-8");
     resultsDiv.appendChild(divTableContainer); 
+
+    trHead.addEventListener("click", (e) => {
+        console.log(e.target.textContent);
+        const tbody = document.querySelector(".resulttable tbody");
+        if (e.target.textContent === "Name") {
+            tbody.replaceChildren();
+            sortByNameR(results, event);
+        }
+        if (e.target.textContent === "Const") {
+            tbody.replaceChildren();
+            sortByConstR(results, event);
+        }
+        if (e.target.textContent === "Pos") {
+            tbody.replaceChildren();
+            sortByPosR(results, event);
+        }
+        if (e.target.textContent === "Rd") {
+            tbody.replaceChildren();
+            sortByRd(results, event);
+        }
+        if (e.target.textContent === "Laps") {
+            tbody.replaceChildren();
+            sortByLaps(results, event);
+        }
+        if (e.target.textContent === "Pts") {
+            tbody.replaceChildren();
+            sortByPts(results, event);
+        }
+
+    });
 }
 function headerRaceData(e, results, qualifying) {
     if (!document.querySelector(".row .rightside")) {
@@ -340,7 +397,7 @@ function headerRaceData(e, results, qualifying) {
         row.appendChild(divmain);
         // display table and headers for table corresponding to qualifying.
         qualifyingHeaderTable(qualifying, e);
-        resultsHeaderTable();
+        resultsHeaderTable(results, e);
 
     }
     else {
@@ -363,15 +420,117 @@ function headerRaceData(e, results, qualifying) {
         divmain.appendChild(p);
         row.appendChild(divmain);
         // display table and headers for table corresponding to qualifying.
-        qualifyingHeaderTable(qualifying);
-        resultsHeaderTable();
+        qualifyingHeaderTable(qualifying, e);
+        resultsHeaderTable(results, e);
     }
 }
 function sortByName(qualifying, race) {
-    
-    qualifying.forEach(q => {
+    let sorted = qualifying.sort((a, b) => a.driver.forename.localeCompare(b.driver.forename));
+    console.log(race.target);
+    sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
             displaySingleQualifying(q);
         }
     });
 }
+function sortByConst(qualifying,  race) {
+    let sorted = qualifying.sort((a, b) => a.constructor.name.localeCompare(b.constructor.name));
+    console.log(race.target);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
+}
+function sortByPos(qualifying, race) {
+    let sorted = qualifying.sort((a, b) => a.position - b.position);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
+}
+function sortByQ1(qualifying, race) {
+    let sorted = qualifying.sort((a, b) => timestampComparator(a.q1, b.q1));
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
+}
+function sortByQ2(qualifying, race) {
+    let sorted = qualifying.sort((a, b) => timestampComparator(a.q2, b.q2));
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
+}
+function sortByQ3(qualifying, race) {
+    let sorted = qualifying.sort((a, b) => timestampComparator(a.q3, b.q3));
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleQualifying(q);
+        }
+    });
+}
+function timestampComparator(first, second) {
+    if (first === "") {
+        first = "z";
+    }
+    if (second === "") {
+        second = "z";
+    }
+    return first.localeCompare(second);
+}
+function sortByNameR(results, race) {
+    let sorted = results.sort((a, b) => a.driver.forename.localeCompare(b.driver.forename));
+    console.log(race.target);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+function sortByConstR(results,  race) {
+    let sorted = results.sort((a, b) => a.constructor.name.localeCompare(b.constructor.name));
+    console.log(race.target);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+function sortByPosR(results, race) {
+    let sorted = results.sort((a, b) => a.position - b.position);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+function sortByRd(results, race) {
+    let sorted = results.sort((a, b) => a.race.round - b.race.round);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+function sortByLaps(results, race) {
+    let sorted = results.sort((a, b) => a.laps - b.laps);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+function sortByPts(results, race) {
+    let sorted = results.sort((a, b) => a.points - b.points);
+    sorted.forEach(q => {
+        if (race.target.racename === q.race.name) {
+            displaySingleResult(q);
+        }
+    });
+}
+
