@@ -181,7 +181,7 @@ function listRaces(e, season) {
 
         let raceTable = document.querySelector(".leftside");
         const table = document.createElement("table");
-        table.classList.add("table", "table-sm");
+        table.classList.add("table", "table-sm","racesTable");
 
         const thead = document.createElement("thead");
         const headerRow = document.createElement("tr");
