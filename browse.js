@@ -61,7 +61,8 @@ function displayRaces(races, results, qualifying) {
     displayData(races, results, qualifying);
 }
 function displayData(races, results, qualifying) {
-    races.forEach(r => {
+    let sorted = races.sort((a, b) => roundComparator(a.round, b.round));
+    sorted.forEach(r => {
         displaySingleRace(r, results, qualifying);
     });
 }
@@ -395,7 +396,7 @@ function headerRaceData(e, results, qualifying) {
         divmain.appendChild(h4);
         divmain.appendChild(p);
         row.appendChild(divmain);
-        // display table and headers for table corresponding to qualifying.
+        // display table and headers for table corresponding to qualifying AND results.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
 
@@ -419,7 +420,7 @@ function headerRaceData(e, results, qualifying) {
         divmain.appendChild(h4);
         divmain.appendChild(p);
         row.appendChild(divmain);
-        // display table and headers for table corresponding to qualifying.
+        // display table and headers for table corresponding to qualifying AND.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
     }
@@ -482,6 +483,9 @@ function timestampComparator(first, second) {
         second = "z";
     }
     return first.localeCompare(second);
+}
+function roundComparator(first, second) {
+    return first - second;
 }
 function sortByNameR(results, race) {
     let sorted = results.sort((a, b) => a.driver.forename.localeCompare(b.driver.forename));
