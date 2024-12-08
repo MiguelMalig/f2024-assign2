@@ -94,6 +94,7 @@ function displaySingleRace(race, results, qualifying) {
     button.racename = race.name;
     button.round = race.round;
     button.circuit = race.circuit.name;
+    button.circuitID = race.circuit.id;
     button.date = race.date;
     button.url = race.url;
     roundtd.textContent = race.round;
@@ -543,19 +544,47 @@ function headerRaceData(e, results, qualifying) {
         const h4 = document.createElement("h4");
         const p = document.createElement("p");
         const strong = document.createElement("strong");
-
+        const strong1 = document.createElement("strong");
         divmain.classList.add("col-md-8", "text-center", "rightside");
         h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
-        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
-        p.appendChild(strong);
 
+        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.date + ", " + e.target.url + ", ";
+        strong1.textContent = e.target.circuit;
+
+
+        p.appendChild(strong);
+        p.appendChild(strong1);
         divmain.appendChild(h4);
         divmain.appendChild(p);
         row.appendChild(divmain);
         // display table and headers for table corresponding to qualifying AND results.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
-
+        strong1.addEventListener("click", () => {
+            fetch("https://www.randyconnolly.com/funwebdev/3rd/api/f1/circuits.php?id=" + e.target.circuitID)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+            .then(data => {
+                showModal(
+                    "Circuit Details",
+                    `
+                    <h3>${data.name}</h3>
+                    <p><strong>Location:</strong> ${data.location}</p>
+                    <p><strong>Country:</strong> ${data.country}</p>
+                    <p><strong>URL:</strong> ${data.url}</p>
+                    `, e
+                );
+            })
+        })
     }
     else {
         console.log("Else invoke");
@@ -567,12 +596,13 @@ function headerRaceData(e, results, qualifying) {
         const h4 = document.createElement("h4");
         const p = document.createElement("p");
         const strong = document.createElement("strong");
-
+        const strong1 = document.createElement("strong");
         divmain.classList.add("col-md-8", "text-center", "rightside");
         h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
-        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.circuit + ", " + e.target.date + ", " + e.target.url;
+        strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.date + ", " + e.target.url + ", ";
+        strong1.textContent = e.target.circuit;
         p.appendChild(strong);
-
+        p.appendChild(strong1);
         divmain.appendChild(h4);
         divmain.appendChild(p);
         row.appendChild(divmain);
