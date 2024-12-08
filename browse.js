@@ -126,6 +126,7 @@ function displaySingleResult(result,results) {
 
     postd.textContent = result.position;
     nametd.textContent = result.driver.forename + " " + result.driver.surname;
+    nametd.ref = result.driver.ref;
     constructortd.textContent = result.constructor.name;
     roundtd.textContent = result.race.round;
     lapstd.textContent = result.laps;
@@ -133,16 +134,42 @@ function displaySingleResult(result,results) {
 
     //Modal here
 
-    nametd.addEventListener("click", () => {
-        showModal(
-            `${result.driver.forename} ${result.driver.surname}`,
-            `
-            <p><strong>Driver ID:</strong> ${result.driver.id}</p>
-            <p><strong>Date of Birth:</strong> ${result.driver.dob}</p> 
-            <p><strong>Nationality:</strong> ${result.driver.nationality}</p>
-            <p><strong>URL:</strong> ${result.driver.url}</p>
-            `
-        );
+    nametd.addEventListener("click", (e) => {
+        
+        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/drivers.php?ref=" + e.target.ref)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+             .then(data => {
+                showModal(
+                    `${data.forename} ${data.surname}`,
+                    `
+                    <p><strong>Driver ID:</strong> ${data.driverId}</p>
+                    <p><strong>Date of Birth:</strong> ${data.dob}</p> 
+                    <p><strong>Nationality:</strong> ${data.nationality}</p>
+                    <p><strong>URL:</strong> ${data.url}</p>
+                    `, data, result.race.year, results 
+                ); 
+             })
+            
+
+        // showModal(
+        //     `${result.driver.forename} ${result.driver.surname}`,
+        //     `
+        //     <p><strong>Driver ID:</strong> ${result.driver.id}</p>
+        //     <p><strong>Date of Birth:</strong> ${result.driver.dob}</p> 
+        //     <p><strong>Nationality:</strong> ${result.driver.nationality}</p>
+        //     <p><strong>URL:</strong> ${result.driver.url}</p>
+        //     `
+        // );
         //I dont know where dob,age, or url is in database.. But his pdf shows that its a must have?.. left those just incase.
     });
 
@@ -153,7 +180,7 @@ function displaySingleResult(result,results) {
             <h3>${result.constructor.name}</h3>
             <p><strong>Nationality:</strong> ${result.constructor.nationality}</p>
             <p><strong>URL:</strong> Add race url here..</p>
-            `,results
+            `, result, result.race.year , results
         );
     });
 
@@ -172,7 +199,7 @@ function displaySingleResult(result,results) {
 
 //Modal funtcion
 
-function showModal(title, content, raceResults) {
+function showModal(title, content, object, season, raceResults) {
     const modal = document.querySelector("#infoModal");
     const modalTitle = document.querySelector("#modalTitle");
     const modalContent = document.querySelector("#modalContent");
@@ -181,7 +208,7 @@ function showModal(title, content, raceResults) {
     modalContent.innerHTML = content;
 
     // Add race results.. I incorrectly put the array,
-    if (raceResults) {
+    if (modalTitle.textContent === "Constructor Details") {
         const divTable = document.createElement("div");
         divTable.classList.add("table-responsive-vertical");
 
@@ -212,6 +239,41 @@ function showModal(title, content, raceResults) {
             `;
             resultsTable.appendChild(row);
             divTable.appendChild(resultsTable);
+        });
+
+        modalContent.appendChild(divTable);
+    }
+    if (modalTitle.textContent === `${object.forename} ${object.surname}`) {
+        const divTable = document.createElement("div");
+        divTable.classList.add("table-responsive-vertical");
+
+        const resultsTable = document.createElement("table");
+        resultsTable.classList.add("race-results");
+
+        // Table header
+        const headerRow = document.createElement("tr");
+        headerRow.innerHTML = `
+            <th>Rnd</th>
+            <th>Name</th>
+            <th>Pos</th>
+            <th>Points</th>
+        `;
+        resultsTable.appendChild(headerRow);
+        divTable.appendChild(resultsTable);
+
+        // Table body with results data
+        raceResults.forEach(result => {
+            if (result.driver.ref === object.driverRef && result.race.year == season) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${result.race.round}</td>
+                    <td>${result.race.name}</td>
+                    <td>${result.position}</td>
+                    <td>${result.points}</td>
+                `;
+                resultsTable.appendChild(row);
+                divTable.appendChild(resultsTable);
+            }
         });
 
         modalContent.appendChild(divTable);
