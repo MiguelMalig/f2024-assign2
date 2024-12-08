@@ -126,11 +126,8 @@ function displaySingleResult(result,results) {
 
     postd.textContent = result.position;
     nametd.textContent = result.driver.forename + " " + result.driver.surname;
-<<<<<<< HEAD
     nametd.ref = result.driver.ref;
-=======
     nametd.classList.add('clickable');
->>>>>>> d3c025d1487ff8511efaf62e7a5f7c60bb1061cc
     constructortd.textContent = result.constructor.name;
     constructortd.classList.add('clickable');
     roundtd.textContent = result.race.round;
