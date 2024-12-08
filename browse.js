@@ -126,7 +126,9 @@ function displaySingleResult(result,results) {
 
     postd.textContent = result.position;
     nametd.textContent = result.driver.forename + " " + result.driver.surname;
+    nametd.classList.add('clickable');
     constructortd.textContent = result.constructor.name;
+    constructortd.classList.add('clickable');
     roundtd.textContent = result.race.round;
     lapstd.textContent = result.laps;
     pointstd.textContent = result.points;
