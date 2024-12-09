@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const racesURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/races.php?season=";
     const resultsURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/results.php?season="
     const qualifyingURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/qualifying.php?season="
+    const top3 = [];
 
     const season = document.querySelector("#season");
     
@@ -67,12 +68,23 @@ function displayData(races, results, qualifying) {
     });
 }
 function displayResults(results, race) {
+    const top3 = [];
     const test = results.filter(r => race.target.racename === r.race.name);
+    top3.push(test[0]);
+    top3.push(test[1]);
+    top3.push(test[2]);
+    console.log(top3);
+    displayTop3(top3);
+
     test.forEach(r => {
         // if (race.target.racename === r.race.name) {
         //     displaySingleResult(r,results);
         // }
+        //adding top3 to headerTableResults
+
+        //display single results
         displaySingleResult(r);
+
     });
 }
 function displayQualifying(qualifying, race) {
@@ -85,6 +97,30 @@ function displayQualifying(qualifying, race) {
         displaySingleQualifying(q);
     });
 }
+function displayTop3(top3) {
+    const rowtop3 = document.querySelector('.row .top3');
+    const medals = ['gold', 'silver', 'bronze'];
+    
+    for (let i = 0; i < 3; i++) {
+        const div = document.createElement('div');
+        div.classList.add('col-md-4');
+
+        const div2 = document.createElement('div');
+        div2.classList.add('border', 'p-3', 'text-center', `${medals[i]}`);
+
+        const h4 = document.createElement('h4');
+        const h1 = document.createElement('h1');
+
+        h4.textContent = `${top3[i].driver.forename} ${top3[i].driver.surname}`;
+        h1.textContent = `${top3[i].position}st`;
+
+        div2.appendChild(h4);
+        div2.appendChild(h1);
+        div.appendChild(div2);
+        rowtop3.appendChild(div);
+    }
+}
+
 function displaySingleRace(race) {
     const results = JSON.parse(localStorage.getItem("results" + race.year));
     const qualifying = JSON.parse(localStorage.getItem("qualifying" + race.year));
@@ -120,8 +156,9 @@ function displaySingleRace(race) {
         displayQualifying(qualifying, e);
     })
 }
-//I added the results array.. I'm not sure if its considered good coding LOL
+
 function displaySingleResult(result) {
+    
     const results = JSON.parse(localStorage.getItem("results" + result.race.year));
     const tbody = document.querySelector(".resulttable tbody");
     const tr = document.createElement("tr");
@@ -609,7 +646,12 @@ function resultsHeaderTable(results, event) {
     const resultsTitle = document.createElement('h5')
     resultsTitle.textContent = "Results";
 
+    const top3row = document.createElement('div');
+    top3row.classList.add('row', 'top3');
+
+    //i can change order here..
     divColumn.append(resultsTitle);
+    divColumn.append(top3row);
 
     const resultTable = document.createElement('table')
     resultTable.classList.add('table', 'table-sm', 'mt-3', 'resulttable');
