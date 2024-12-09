@@ -63,25 +63,32 @@ function displayRaces(races, results, qualifying) {
 function displayData(races, results, qualifying) {
     let sorted = races.sort((a, b) => roundComparator(a.round, b.round));
     sorted.forEach(r => {
-        displaySingleRace(r, results, qualifying);
+        displaySingleRace(r);
     });
 }
 function displayResults(results, race) {
-    results.forEach(r => {
-        if (race.target.racename === r.race.name) {
-            displaySingleResult(r,results);
-        }
+    const test = results.filter(r => race.target.racename === r.race.name);
+    test.forEach(r => {
+        // if (race.target.racename === r.race.name) {
+        //     displaySingleResult(r,results);
+        // }
+        displaySingleResult(r);
     });
 }
 function displayQualifying(qualifying, race) {
     // need to sort this qualifying Array by position.
-    qualifying.forEach(q => {
-        if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
-        }
+    const filtered = qualifying.filter(q => race.target.racename === q.race.name)
+    filtered.forEach(q => {
+        // if (race.target.racename === q.race.name) {
+        //     displaySingleQualifying(q);
+        // }
+        displaySingleQualifying(q);
     });
 }
-function displaySingleRace(race, results, qualifying) {
+function displaySingleRace(race) {
+    const results = JSON.parse(localStorage.getItem("results" + race.year));
+    const qualifying = JSON.parse(localStorage.getItem("qualifying" + race.year));
+
     const tbody = document.querySelector(".table tbody");
     const tr = document.createElement("tr");
     const roundtd = document.createElement("td");
@@ -114,7 +121,8 @@ function displaySingleRace(race, results, qualifying) {
     })
 }
 //I added the results array.. I'm not sure if its considered good coding LOL
-function displaySingleResult(result,results) {
+function displaySingleResult(result) {
+    const results = JSON.parse(localStorage.getItem("results" + result.race.year));
     const tbody = document.querySelector(".resulttable tbody");
     const tr = document.createElement("tr");
 
@@ -177,6 +185,7 @@ function displaySingleResult(result,results) {
     });
 
     constructortd.addEventListener("click", () => {
+
         showModal(
             "Constructor Details",
             `
