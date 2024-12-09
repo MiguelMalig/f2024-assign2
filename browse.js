@@ -107,15 +107,25 @@ function displayTop3(top3) {
         const h4 = document.createElement('h4');
         const h1 = document.createElement('h1');
 
-        h4.textContent = `${top3[i].driver.forename} ${top3[i].driver.surname}`;
+        h4.innerHTML = `${top3[i].driver.forename} <br> ${top3[i].driver.surname}`;
         h1.textContent = `${top3[i].position}st`;
+
+        if(i==1){
+            h1.textContent = `${top3[i].position}nd`;
+        }
+        if(i==2){
+            h1.textContent = `${top3[i].position}rd`;
+        }
 
         div2.appendChild(h4);
         div2.appendChild(h1);
         div.appendChild(div2);
         rowtop3.appendChild(div);
     }
+
+    
 }
+
 function displaySingleRace(race, results, qualifying) {
 
     const tbody = document.querySelector(".table tbody");
