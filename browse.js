@@ -338,6 +338,8 @@ function showModal(title, content, object, season, raceResults) {
     }
     
     if (modalTitle.textContent === `${object.forename} ${object.surname}`) {
+        let sorted = raceResults.sort((a, b) => a.race.round - b.race.round);
+
         const divTable = document.createElement("div");
         divTable.classList.add("table-responsive-vertical");
 
@@ -356,7 +358,7 @@ function showModal(title, content, object, season, raceResults) {
         divTable.appendChild(resultsTable);
 
         // Table body with results data
-        raceResults.forEach(result => {
+        sorted.forEach(result => {
             if (result.driver.ref === object.driverRef && result.race.year == season) {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -368,7 +370,7 @@ function showModal(title, content, object, season, raceResults) {
                     row.innerHTML += `<td>${result.points}</td>`;
                 }
                 else {
-                    row.innerHTML += `<td>N/A</td>`;
+                    row.innerHTML += `<td>-</td>`;
                 }
                 resultsTable.appendChild(row);
                 divTable.appendChild(resultsTable);
