@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const season = document.querySelector("#season");
     
-    
+    document.querySelector("#loader1").style.display = "none";
 
     let placeholder = document.createElement("option");
     placeholder.selected = true;
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     season.addEventListener("change", e => {
         listRaces(e, season);
-
+        document.querySelector("#loader1").style.display = "block";
         let resultData = localStorage.getItem("results" + e.target.value);
         let qualifyingData = localStorage.getItem("qualifying" + e.target.value); 
         let data = localStorage.getItem("races" + e.target.value); 
@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 localStorage.setItem("races" + e.target.value, JSON.stringify(data[0])); 
                 localStorage.setItem("results" + e.target.value, JSON.stringify(data[1])); 
                 localStorage.setItem("qualifying" + e.target.value, JSON.stringify(data[2])); 
+
+                document.querySelector("#loader1").style.display = "none";
             })
         }
         else { // if it exists, grab data from localStorage
@@ -48,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
             qualifyingData = JSON.parse(localStorage.getItem("qualifying" + e.target.value)); 
             racesData = JSON.parse(localStorage.getItem("races" + e.target.value));
             displayRaces(racesData, resultData, qualifyingData);
+            document.querySelector("#loader1").style.display = "none";
         }
     })
 });
@@ -70,9 +73,13 @@ function displayData(races, results, qualifying) {
 function displayResults(results, race) {
     const top3 = [];
     const test = results.filter(r => race.target.racename === r.race.name);
-    top3.push(test[0]);
-    top3.push(test[1]);
-    top3.push(test[2]);
+    const first = test.find(a => a.position === 1);
+    const second = test.find(b => b.position === 2);
+    const third = test.find(c => c.position === 3);
+
+    top3.push(first);
+    top3.push(second);
+    top3.push(third);
     
     displayTop3(top3);
 
@@ -416,8 +423,8 @@ function displaySingleQualifying(qualifying, qualifyingData) {
     constructortd.ref = qualifying.constructor.ref;
     constructortd.season = qualifying.race.year;
     q1td.textContent = qualifying.q1;
-    q2td.textContent = qualifying.q2;
-    q3td.textContent = qualifying.q3;
+    q2td.textContent = qualifying.q2 || "-";
+    q3td.textContent = qualifying.q3 || "-";
 
     trHead.appendChild(postd);
     trHead.appendChild(nametd);
