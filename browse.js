@@ -63,7 +63,7 @@ function displayRaces(races, results, qualifying) {
 function displayData(races, results, qualifying) {
     let sorted = races.sort((a, b) => roundComparator(a.round, b.round));
     sorted.forEach(r => {
-        displaySingleRace(r);
+        displaySingleRace(r, results, qualifying);
     });
 }
 function displayResults(results, race) {
@@ -72,7 +72,7 @@ function displayResults(results, race) {
         // if (race.target.racename === r.race.name) {
         //     displaySingleResult(r,results);
         // }
-        displaySingleResult(r);
+        displaySingleResult(r,results);
     });
 }
 function displayQualifying(qualifying, race) {
@@ -82,12 +82,10 @@ function displayQualifying(qualifying, race) {
         // if (race.target.racename === q.race.name) {
         //     displaySingleQualifying(q);
         // }
-        displaySingleQualifying(q);
+        displaySingleQualifying(q, qualifying);
     });
 }
-function displaySingleRace(race) {
-    const results = JSON.parse(localStorage.getItem("results" + race.year));
-    const qualifying = JSON.parse(localStorage.getItem("qualifying" + race.year));
+function displaySingleRace(race, results, qualifying) {
 
     const tbody = document.querySelector(".table tbody");
     const tr = document.createElement("tr");
@@ -115,14 +113,13 @@ function displaySingleRace(race) {
     tbody.appendChild(tr);
     button.addEventListener("click", (e) => {
         headerRaceData(e, results, qualifying);
-        
+        console.log(results);
         displayResults(results, e);
         displayQualifying(qualifying, e);
     })
 }
 //I added the results array.. I'm not sure if its considered good coding LOL
-function displaySingleResult(result) {
-    const results = JSON.parse(localStorage.getItem("results" + result.race.year));
+function displaySingleResult(result, results) {
     const tbody = document.querySelector(".resulttable tbody");
     const tr = document.createElement("tr");
 
@@ -357,8 +354,8 @@ function showModal(title, content, object, season, raceResults) {
 }
 
 
-function displaySingleQualifying(qualifying) {
-    const qualifyingData = JSON.parse(localStorage.getItem("qualifying" + qualifying.race.year)); 
+function displaySingleQualifying(qualifying, qualifyingData) {
+    
 
     const tbody = document.querySelector(".qualifytable tbody");
     const trHead = document.createElement('tr');
@@ -610,7 +607,7 @@ function resultsHeaderTable(results, event) {
     resultsTitle.textContent = "Results";
 
     divColumn.append(resultsTitle);
-
+    // top3(results, event, divColumn);
     const resultTable = document.createElement('table')
     resultTable.classList.add('table', 'table-sm', 'mt-3', 'resulttable');
 
@@ -811,7 +808,7 @@ function sortByName(qualifying, race) {
     console.log(race.target);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -820,7 +817,7 @@ function sortByConst(qualifying,  race) {
     console.log(race.target);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -828,7 +825,7 @@ function sortByPos(qualifying, race) {
     let sorted = qualifying.sort((a, b) => a.position - b.position);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -836,7 +833,7 @@ function sortByQ1(qualifying, race) {
     let sorted = qualifying.sort((a, b) => timestampComparator(a.q1, b.q1));
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -844,7 +841,7 @@ function sortByQ2(qualifying, race) {
     let sorted = qualifying.sort((a, b) => timestampComparator(a.q2, b.q2));
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -852,7 +849,7 @@ function sortByQ3(qualifying, race) {
     let sorted = qualifying.sort((a, b) => timestampComparator(a.q3, b.q3));
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleQualifying(q);
+            displaySingleQualifying(q, qualifying);
         }
     });
 }
@@ -873,7 +870,7 @@ function sortByNameR(results, race) {
     console.log(race.target);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);
         }
     });
 }
@@ -882,7 +879,7 @@ function sortByConstR(results,  race) {
     console.log(race.target);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);
         }
     });
 }
@@ -890,7 +887,7 @@ function sortByPosR(results, race) {
     let sorted = results.sort((a, b) => a.position - b.position);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);;
         }
     });
 }
@@ -898,7 +895,7 @@ function sortByRd(results, race) {
     let sorted = results.sort((a, b) => a.race.round - b.race.round);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);
         }
     });
 }
@@ -906,7 +903,7 @@ function sortByLaps(results, race) {
     let sorted = results.sort((a, b) => a.laps - b.laps);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);
         }
     });
 }
@@ -914,7 +911,7 @@ function sortByPts(results, race) {
     let sorted = results.sort((a, b) => a.points - b.points);
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
-            displaySingleResult(q);
+            displaySingleResult(q, results);
         }
     });
 }
