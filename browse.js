@@ -140,6 +140,7 @@ function displaySingleResult(result) {
     constructortd.textContent = result.constructor.name;
     constructortd.classList.add('clickable');
     constructortd.ref = result.constructor.ref;
+    constructortd.season = result.race.year;
     roundtd.textContent = result.race.round;
     lapstd.textContent = result.laps;
     pointstd.textContent = result.points;
@@ -190,6 +191,7 @@ function displaySingleResult(result) {
     });
 
     constructortd.addEventListener("click", (e) => {
+
         fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + e.target.ref)
         .then(response => {
             if (response.ok) {
@@ -203,14 +205,29 @@ function displaySingleResult(result) {
             }
          })
         .then(data => {
-            showModal(
-                `Constructor Details`,
-                `
-                <h3>${data.name}</h3>
-                <p><strong>Nationality:</strong> ${data.nationality}</p>
-                <p><strong>URL:</strong> ${data.url}</p>
-                `, result, result.race.year , results
-            );
+            fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructorResults.php?ref=" + e.target.ref + "&season=" + result.race.year)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+             .then(constructorHistory => {
+                console.log(constructorHistory);
+                showModal(
+                    `Constructor Details`,
+                    `
+                    <h3>${data.name}</h3>
+                    <p><strong>Nationality:</strong> ${data.nationality}</p>
+                    <p><strong>URL:</strong> ${data.url}</p>
+                    `, result, result.race.year , constructorHistory
+                );
+             })
         })
     });
 
@@ -249,31 +266,33 @@ function showModal(title, content, object, season, raceResults) {
         // Table header
         const headerRow = document.createElement("tr");
         headerRow.innerHTML = `
-            <th>Position</th>
+            <th>Round</th>
+            <th>Name</th>
             <th>Driver</th>
-            <th>Constructor</th>
-            <th>Time</th>
-            <th>Points</th>
+            <th>Position</th>
         `;
         resultsTable.appendChild(headerRow);
         divTable.appendChild(resultsTable);
 
         // Table body with results data
         raceResults.forEach(result => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${result.position}</td>
-                <td>${result.driver.forename} ${result.driver.surname}</td>
-                <td>${result.constructor.name}</td>
-                <td>${result.time || "N/A"}</td>
-                <td>${result.points}</td>
-            `;
-            resultsTable.appendChild(row);
-            divTable.appendChild(resultsTable);
+            // if (result.constructor.ref === object.constructorRef && result.year === season) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${result.round}</td>
+                    <td>${result.name}</td>
+                    <td>${result.forename} ${result.surname}</td>
+                    <td>${result.positionOrder || "N/A"}</td>
+                `;
+                resultsTable.appendChild(row);
+                divTable.appendChild(resultsTable);
+            // }
         });
 
         modalContent.appendChild(divTable);
     }
+    console.log(modalTitle.textContent);
+    console.log(`${object.forename} ${object.surname}`);
     if (modalTitle.textContent === `${object.forename} ${object.surname}`) {
         const divTable = document.createElement("div");
         divTable.classList.add("table-responsive-vertical");
@@ -300,8 +319,13 @@ function showModal(title, content, object, season, raceResults) {
                     <td>${result.race.round}</td>
                     <td>${result.race.name}</td>
                     <td>${result.position}</td>
-                    <td>${result.points}</td>
                 `;
+                if(result.points) {
+                    row.innerHTML += `<td>${result.points}</td>`;
+                }
+                else {
+                    row.innerHTML += `<td>N/A</td>`;
+                }
                 resultsTable.appendChild(row);
                 divTable.appendChild(resultsTable);
             }
@@ -334,6 +358,8 @@ function showModal(title, content, object, season, raceResults) {
 
 
 function displaySingleQualifying(qualifying) {
+    const qualifyingData = JSON.parse(localStorage.getItem("qualifying" + qualifying.race.year)); 
+
     const tbody = document.querySelector(".qualifytable tbody");
     const trHead = document.createElement('tr');
 
@@ -346,7 +372,12 @@ function displaySingleQualifying(qualifying) {
 
     postd.textContent = qualifying.position;
     nametd.textContent = qualifying.driver.forename + " " + qualifying.driver.surname;
+    nametd.ref = qualifying.driver.ref;
+    nametd.classList.add('clickable');
     constructortd.textContent = qualifying.constructor.name;
+    constructortd.classList.add('clickable');
+    constructortd.ref = qualifying.constructor.ref;
+    constructortd.season = qualifying.race.year;
     q1td.textContent = qualifying.q1;
     q2td.textContent = qualifying.q2;
     q3td.textContent = qualifying.q3;
@@ -359,6 +390,88 @@ function displaySingleQualifying(qualifying) {
     trHead.appendChild(q3td);
 
     tbody.appendChild(trHead);
+
+    nametd.addEventListener("click", (e) => {
+        
+        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/drivers.php?ref=" + e.target.ref)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+             .then(data => {
+                showModal(
+                    `${data.forename} ${data.surname}`,
+                    `
+                   
+                     <div class="container-fluid">
+                        <div class="row">
+                            <!-- Image Column -->
+                            <div class="col-md-4">
+                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                            </div>
+                    <!-- Details Column -->
+                            <div class="col-md-6">
+                            <div class="driver-details">
+                                <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
+                                <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
+                                <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
+                                <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
+                            </div>
+                            </div>
+                          </div>
+                     </div>
+                    
+                    `, data, qualifying.race.year, qualifyingData 
+                ); 
+             })
+            
+    });
+
+    constructortd.addEventListener("click", (e) => {
+        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + e.target.ref)
+        .then(response => {
+            if (response.ok) {
+               return response.json();
+            }
+            else {
+               return Promise.reject({
+                  status: response.status,
+                  statusText: response.statusText
+               })
+            }
+         })
+        .then(data => {
+            fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructorResults.php?ref=" + e.target.ref + "&season=" + qualifying.race.year)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+             .then(constructorHistory => {
+                showModal(
+                    `Constructor Details`,
+                    `
+                    <h3>${data.name}</h3>
+                    <p><strong>Nationality:</strong> ${data.nationality}</p>
+                    <p><strong>URL:</strong> ${data.url}</p>
+                    `, qualifying, qualifying.race.year , constructorHistory
+                );
+             })
+        })
+    });
     // qualifying.addEventListener("click", (e) => {
         
     // })
