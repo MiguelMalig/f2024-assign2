@@ -306,7 +306,7 @@ function showModal(title, content, object, season, raceResults) {
         divTable.classList.add("table-responsive-vertical");
 
         const resultsTable = document.createElement("table");
-        resultsTable.classList.add("race-results");
+        resultsTable.classList.add("race-results",'table-sm', 'mt-3','table');
 
         // Table header
         const headerRow = document.createElement("tr");
@@ -344,7 +344,7 @@ function showModal(title, content, object, season, raceResults) {
         divTable.classList.add("table-responsive-vertical");
 
         const resultsTable = document.createElement("table");
-        resultsTable.classList.add("race-results");
+        resultsTable.classList.add("race-results", 'table-sm', 'mt-3','table' );
 
         // Table header
         const headerRow = document.createElement("tr");
