@@ -204,7 +204,7 @@ function displaySingleResult(result) {
          })
         .then(data => {
             showModal(
-                "Constructor Details",
+                `Constructor Details`,
                 `
                 <h3>${data.name}</h3>
                 <p><strong>Nationality:</strong> ${data.nationality}</p>
@@ -584,6 +584,7 @@ function headerRaceData(e, results, qualifying) {
 
         strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.date + ", " + e.target.url + ", ";
         strong1.textContent = e.target.circuit;
+        strong1.classList.add('clickable');
 
 
         p.appendChild(strong);
@@ -635,6 +636,7 @@ function headerRaceData(e, results, qualifying) {
         h4.textContent = "Results for " + e.target.value + " " + e.target.racename;
         strong.textContent = e.target.racename + ", " + e.target.round + ", " + e.target.value + ", " + e.target.date + ", " + e.target.url + ", ";
         strong1.textContent = e.target.circuit;
+        strong1.classList.add('clickable');
         p.appendChild(strong);
         p.appendChild(strong1);
         divmain.appendChild(h4);
@@ -643,6 +645,31 @@ function headerRaceData(e, results, qualifying) {
         // display table and headers for table corresponding to qualifying AND.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
+        strong1.addEventListener("click", () => {
+            fetch("https://www.randyconnolly.com/funwebdev/3rd/api/f1/circuits.php?id=" + e.target.circuitID)
+            .then(response => {
+                if (response.ok) {
+                   return response.json();
+                }
+                else {
+                   return Promise.reject({
+                      status: response.status,
+                      statusText: response.statusText
+                   })
+                }
+             })
+            .then(data => {
+                showModal(
+                    "Circuit Details",
+                    `
+                    <h3>${data.name}</h3>
+                    <p><strong>Location:</strong> ${data.location}</p>
+                    <p><strong>Country:</strong> ${data.country}</p>
+                    <p><strong>URL:</strong> ${data.url}</p>
+                    `, e
+                );
+            })
+        })
     }
 }
 function sortByName(qualifying, race) {
