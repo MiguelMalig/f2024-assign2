@@ -368,6 +368,7 @@ function listRaces(e, season) {
     let seasonParagraph = document.querySelector(".leftside p");
         let raceCaption = document.querySelector(".leftside h4");
         raceCaption.innerHTML = e.target.value + " Races";
+        raceCaption.classList.add('text-center')
         seasonParagraph.remove();
         season.remove();
 
