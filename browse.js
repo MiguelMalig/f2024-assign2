@@ -481,6 +481,7 @@ function listRaces(e, season) {
     let seasonParagraph = document.querySelector(".leftside p");
         let raceCaption = document.querySelector(".leftside h4");
         raceCaption.innerHTML = e.target.value + " Races";
+        raceCaption.classList.add('text-center')
         seasonParagraph.remove();
         season.remove();
 
@@ -725,10 +726,20 @@ function headerRaceData(e, results, qualifying) {
                 showModal(
                     "Circuit Details",
                     `
-                    <h3>${data.name}</h3>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Image Column -->
+                            <div class="col-md-4">
+                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                            </div>
+                    <!-- Details Column -->
+                            <div class="col-md-6">
+                                           <h3>${data.name}</h3>
                     <p><strong>Location:</strong> ${data.location}</p>
                     <p><strong>Country:</strong> ${data.country}</p>
                     <p><strong>URL:</strong> ${data.url}</p>
+                          </div>
+                     </div>
                     `, e
                 );
             })
@@ -775,10 +786,20 @@ function headerRaceData(e, results, qualifying) {
                 showModal(
                     "Circuit Details",
                     `
-                    <h3>${data.name}</h3>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Image Column -->
+                            <div class="col-md-4">
+                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                            </div>
+                    <!-- Details Column -->
+                            <div class="col-md-6">
+                                           <h3>${data.name}</h3>
                     <p><strong>Location:</strong> ${data.location}</p>
                     <p><strong>Country:</strong> ${data.country}</p>
                     <p><strong>URL:</strong> ${data.url}</p>
+                          </div>
+                     </div>
                     `, e
                 );
             })
