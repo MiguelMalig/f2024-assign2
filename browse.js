@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const season = document.querySelector("#season");
     
-    console.log(season);
+    
 
     let placeholder = document.createElement("option");
     placeholder.selected = true;
@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", function() {
         let data = localStorage.getItem("races" + e.target.value); 
         if (!data) { // if localStorage doesn't exist
             getSeasonData(e, racesURL, resultsURL, qualifyingURL).then(data => {
-                console.log(data);
+                
                 resultData = data[1];
                 qualifyingData = data[2];
                 racesData = data[0];
-                console.log(racesData);
+                
                 displayData(racesData, resultData, qualifyingData);
 
                 localStorage.setItem("races" + e.target.value, JSON.stringify(data[0])); 
@@ -73,7 +73,7 @@ function displayResults(results, race) {
     top3.push(test[0]);
     top3.push(test[1]);
     top3.push(test[2]);
-    console.log(top3);
+    
     displayTop3(top3);
 
     test.forEach(r => {
@@ -92,6 +92,29 @@ function displayQualifying(qualifying, race) {
         // }
         displaySingleQualifying(q, qualifying);
     });
+}
+function displayTop3(top3) {
+    const rowtop3 = document.querySelector('.row .top3');
+    const medals = ['gold', 'silver', 'bronze'];
+    
+    for (let i = 0; i < 3; i++) {
+        const div = document.createElement('div');
+        div.classList.add('col-md-4');
+
+        const div2 = document.createElement('div');
+        div2.classList.add('border', 'p-3', 'text-center', `${medals[i]}`);
+
+        const h4 = document.createElement('h4');
+        const h1 = document.createElement('h1');
+
+        h4.textContent = `${top3[i].driver.forename} ${top3[i].driver.surname}`;
+        h1.textContent = `${top3[i].position}st`;
+
+        div2.appendChild(h4);
+        div2.appendChild(h1);
+        div.appendChild(div2);
+        rowtop3.appendChild(div);
+    }
 }
 function displaySingleRace(race, results, qualifying) {
 
@@ -121,7 +144,7 @@ function displaySingleRace(race, results, qualifying) {
     tbody.appendChild(tr);
     button.addEventListener("click", (e) => {
         headerRaceData(e, results, qualifying);
-        console.log(results);
+        
         displayResults(results, e);
         displayQualifying(qualifying, e);
     })
@@ -223,7 +246,7 @@ function displaySingleResult(result, results) {
                 }
              })
              .then(constructorHistory => {
-                console.log(constructorHistory);
+                
                 showModal(
                     `Constructor Details`,
                     `
@@ -296,8 +319,7 @@ function showModal(title, content, object, season, raceResults) {
 
         modalContent.appendChild(divTable);
     }
-    console.log(modalTitle.textContent);
-    console.log(`${object.forename} ${object.surname}`);
+    
     if (modalTitle.textContent === `${object.forename} ${object.surname}`) {
         const divTable = document.createElement("div");
         divTable.classList.add("table-responsive-vertical");
@@ -572,7 +594,7 @@ function qualifyingHeaderTable(qualifying, event) {
     resultsDiv.appendChild(divTableContainer); 
 
     trHead.addEventListener("click", (e) => {
-        console.log(e.target.textContent);
+        
         if (e.target.textContent === "Name") {
             const tbody = document.querySelector(".qualifytable tbody");
             tbody.replaceChildren();
@@ -663,7 +685,7 @@ function resultsHeaderTable(results, event) {
     resultsDiv.appendChild(divTableContainer); 
 
     trHead.addEventListener("click", (e) => {
-        console.log(e.target.textContent);
+        
         const tbody = document.querySelector(".resulttable tbody");
         if (e.target.textContent === "Name") {
             tbody.replaceChildren();
@@ -694,8 +716,6 @@ function resultsHeaderTable(results, event) {
 }
 function headerRaceData(e, results, qualifying) {
     if (!document.querySelector(".row .rightside")) {
-        console.log(document.querySelector(".row .rightside"));
-        console.log("if invoke");
         const row = document.querySelector(".row");
 
         const divmain = document.createElement("div");
@@ -756,7 +776,7 @@ function headerRaceData(e, results, qualifying) {
         })
     }
     else {
-        console.log("Else invoke");
+        
         const divmain = document.querySelector(".rightside");
         divmain.replaceChildren();
 
@@ -818,7 +838,7 @@ function headerRaceData(e, results, qualifying) {
 }
 function sortByName(qualifying, race) {
     let sorted = qualifying.sort((a, b) => a.driver.forename.localeCompare(b.driver.forename));
-    console.log(race.target);
+    ;
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
             displaySingleQualifying(q, qualifying);
@@ -827,7 +847,7 @@ function sortByName(qualifying, race) {
 }
 function sortByConst(qualifying,  race) {
     let sorted = qualifying.sort((a, b) => a.constructor.name.localeCompare(b.constructor.name));
-    console.log(race.target);
+    
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
             displaySingleQualifying(q, qualifying);
@@ -880,7 +900,7 @@ function roundComparator(first, second) {
 }
 function sortByNameR(results, race) {
     let sorted = results.sort((a, b) => a.driver.forename.localeCompare(b.driver.forename));
-    console.log(race.target);
+    
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
             displaySingleResult(q, results);
@@ -889,7 +909,7 @@ function sortByNameR(results, race) {
 }
 function sortByConstR(results,  race) {
     let sorted = results.sort((a, b) => a.constructor.name.localeCompare(b.constructor.name));
-    console.log(race.target);
+    
     sorted.forEach(q => {
         if (race.target.racename === q.race.name) {
             displaySingleResult(q, results);
