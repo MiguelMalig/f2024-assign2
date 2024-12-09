@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const racesURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/races.php?season=";
     const resultsURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/results.php?season="
     const qualifyingURL = "https://www.randyconnolly.com/funwebdev/3rd/api/f1/qualifying.php?season="
+    const top3 = [];
 
     const season = document.querySelector("#season");
     
@@ -67,7 +68,14 @@ function displayData(races, results, qualifying) {
     });
 }
 function displayResults(results, race) {
+    const top3 = [];
     const test = results.filter(r => race.target.racename === r.race.name);
+    top3.push(test[0]);
+    top3.push(test[1]);
+    top3.push(test[2]);
+    console.log(top3);
+    displayTop3(top3);
+
     test.forEach(r => {
         // if (race.target.racename === r.race.name) {
         //     displaySingleResult(r,results);
@@ -606,8 +614,13 @@ function resultsHeaderTable(results, event) {
     const resultsTitle = document.createElement('h5')
     resultsTitle.textContent = "Results";
 
+    const top3row = document.createElement('div');
+    top3row.classList.add('row', 'top3');
+
+    //i can change order here..
     divColumn.append(resultsTitle);
-    // top3(results, event, divColumn);
+    divColumn.append(top3row);
+
     const resultTable = document.createElement('table')
     resultTable.classList.add('table', 'table-sm', 'mt-3', 'resulttable');
 
