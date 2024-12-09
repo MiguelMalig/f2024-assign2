@@ -1,114 +1,92 @@
-COMP 3512 - F1 Dashboard Project
-Overview
-This repository contains code for an F1 Dashboard project that provides a web-based interface for exploring Formula 1 racing data. The application allows users to view and analyze race results, qualifying data, driver information, and constructor details across multiple F1 seasons (2020-2023). It utilizes RESTful APIs to fetch and display dynamic racing data with a responsive user interface.
-Features
+# F1 Dashboard Project 🏎️
 
-Season Selection: Browse races from multiple F1 seasons (2020-2023)
-Race Results: View detailed race results including:
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952B3?style=flat&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-Driver positions and points
-Lap counts
-Constructor information
+A dynamic Formula 1 statistics dashboard that provides comprehensive race data, driver information, and constructor details for F1 seasons from 2020 to 2023.
 
+![F1 Dashboard Preview](path-to-your-screenshot.png)
 
-Qualifying Data: Access qualifying session data with:
+## ✨ Features
 
-Q1, Q2, and Q3 times
-Driver and constructor performance
+### 🏁 Race Data
+- Browse races across multiple F1 seasons (2020-2023)
+- View detailed race results and qualifying data
+- Sort results by various criteria (position, points, lap times)
+- Interactive podium visualization for top 3 finishers
 
+### 👨‍🏎️ Driver Profiles
+- Comprehensive driver information
+- Historical race performance
+- Career statistics
+- Interactive driver cards
 
-Driver Information: Detailed driver profiles including:
+### 🏢 Constructor Information
+- Team details and history
+- Season performance metrics
+- Historical constructor data
+- Clickable constructor profiles
 
-Personal information (ID, DOB, nationality)
-Race history and performance
+## 💻 Technologies
 
+- **Frontend Framework:** Bootstrap 5.3.3
+- **Languages:** HTML5, CSS3, JavaScript (ES6+)
+- **Data Storage:** Local Storage for caching
+- **API Integration:** RESTful APIs
+- **Responsive Design:** Mobile-first approach
 
-Constructor Details: View constructor information with:
+## 📁 Project Structure
 
-Team details
-Season performance
-Historical race data
+```
+f1-dashboard/
+│
+├── index.html          # Main application entry
+├── js/
+│   └── browse.js       # Core application logic
+├── css/
+│   └── styles.css      # Custom styling
+└── photos/
+    └── F1_logo.svg     # Assets
+```
 
+## 🔌 API Integration
 
-Sorting Functionality: Sort results by various criteria:
+The dashboard integrates with the following F1 data endpoints:
 
-Driver name
-Constructor
-Position
-Points
-Lap times
-Qualifying times
+- `/api/f1/races.php` - Race information
+- `/api/f1/results.php` - Race results
+- `/api/f1/qualifying.php` - Qualifying data
+- `/api/f1/drivers.php` - Driver profiles
+- `/api/f1/constructors.php` - Constructor data
+- `/api/f1/circuits.php` - Circuit details
 
+## 🎯 Key Features Implementation
 
+### Data Management
+- Efficient local storage caching
+- Dynamic data fetching
+- Robust error handling
 
-Technologies Used
+### User Interface
+- Responsive grid layout
+- Interactive data tables
+- Modal information windows
+- Sortable columns
+- Podium visualizations
 
-HTML5
-CSS3
-JavaScript
-Bootstrap 5.3.3
-RESTful APIs
-Local Storage for data caching
+## 📱 Responsive Design
 
-Main Project Files
+The dashboard is fully responsive and optimized for:
+- 💻 Desktop (1200px+)
+- 💻 Laptop (1024px)
+- 📱 Tablet (768px)
+- 📱 Mobile (320px+)
 
-index.html - Main dashboard interface with responsive layout
-browse.js - Core JavaScript functionality including:
+## 🔧 Browser Support
 
-API data fetching
-Results processing
-Table generation
-Sorting logic
-Modal implementations
-
-
-styles.css - Custom styling and Bootstrap extensions
-
-API Integration
-The project uses multiple F1 data APIs:
-
-/api/f1/races.php - Race information by season
-/api/f1/results.php - Race results data
-/api/f1/qualifying.php - Qualifying session data
-/api/f1/drivers.php - Driver information
-/api/f1/constructors.php - Constructor details
-/api/f1/circuits.php - Circuit information
-
-Features Implementation
-
-Data Management:
-
-Local storage caching for improved performance
-Dynamic data fetching and updates
-Error handling for API requests
-
-
-User Interface:
-
-Responsive grid layout
-Interactive data tables
-Modal windows for detailed information
-Sortable columns
-Podium visualization for top 3 finishers
-
-
-Navigation:
-
-Season selection dropdown
-Race list with quick access buttons
-Clickable driver and constructor names
-
-
-Performance Optimization
-
-Data caching using localStorage
-Efficient DOM manipulation
-Optimized sorting algorithms
-Responsive image handling
-
-Notes
-
-All data is sourced from the F1 REST APIs
-Internet connection required for initial data fetch
-Compatible with modern web browsers
-Responsive design for desktop and mobile viewing
+- ✅ Chrome (latest)
+- ✅ Firefox (latest)
+- ✅ Safari (latest)
+- ✅ Edge (latest)
