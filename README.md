@@ -7,8 +7,6 @@
 
 A dynamic Formula 1 statistics dashboard that provides comprehensive race data, driver information, and constructor details for F1 seasons from 2020 to 2023.
 
-![F1 Dashboard Preview](path-to-your-screenshot.png)
-
 ## ✨ Features
 
 ### 🏁 Race Data
