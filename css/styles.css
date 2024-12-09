@@ -55,7 +55,7 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
     max-height: 1000px; /* had to put this here because without it, it makes the modal scrollable. not sure why.. I think if i implement the races correctly it works*/
   }
 

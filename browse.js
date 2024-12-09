@@ -139,6 +139,7 @@ function displaySingleResult(result) {
     nametd.classList.add('clickable');
     constructortd.textContent = result.constructor.name;
     constructortd.classList.add('clickable');
+    constructortd.ref = result.constructor.ref;
     roundtd.textContent = result.race.round;
     lapstd.textContent = result.laps;
     pointstd.textContent = result.points;
@@ -163,38 +164,56 @@ function displaySingleResult(result) {
                 showModal(
                     `${data.forename} ${data.surname}`,
                     `
-                    <p><strong>Driver ID:</strong> ${data.driverId}</p>
-                    <p><strong>Date of Birth:</strong> ${data.dob}</p> 
-                    <p><strong>Nationality:</strong> ${data.nationality}</p>
-                    <p><strong>URL:</strong> ${data.url}</p>
+                   
+                     <div class="container-fluid">
+                        <div class="row">
+                            <!-- Image Column -->
+                            <div class="col-md-4">
+                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                            </div>
+                    <!-- Details Column -->
+                            <div class="col-md-6">
+                            <div class="driver-details">
+                                <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
+                                <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
+                                <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
+                                <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
+                            </div>
+                            </div>
+                          </div>
+                     </div>
+                    
                     `, data, result.race.year, results 
                 ); 
              })
             
-
-        // showModal(
-        //     `${result.driver.forename} ${result.driver.surname}`,
-        //     `
-        //     <p><strong>Driver ID:</strong> ${result.driver.id}</p>
-        //     <p><strong>Date of Birth:</strong> ${result.driver.dob}</p> 
-        //     <p><strong>Nationality:</strong> ${result.driver.nationality}</p>
-        //     <p><strong>URL:</strong> ${result.driver.url}</p>
-        //     `
-        // );
-        //I dont know where dob,age, or url is in database.. But his pdf shows that its a must have?.. left those just incase.
     });
 
-    constructortd.addEventListener("click", () => {
-
-        showModal(
-            "Constructor Details",
-            `
-            <h3>${result.constructor.name}</h3>
-            <p><strong>Nationality:</strong> ${result.constructor.nationality}</p>
-            <p><strong>URL:</strong> Add race url here..</p>
-            `, result, result.race.year , results
-        );
+    constructortd.addEventListener("click", (e) => {
+        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + e.target.ref)
+        .then(response => {
+            if (response.ok) {
+               return response.json();
+            }
+            else {
+               return Promise.reject({
+                  status: response.status,
+                  statusText: response.statusText
+               })
+            }
+         })
+        .then(data => {
+            showModal(
+                "Constructor Details",
+                `
+                <h3>${data.name}</h3>
+                <p><strong>Nationality:</strong> ${data.nationality}</p>
+                <p><strong>URL:</strong> ${data.url}</p>
+                `, result, result.race.year , results
+            );
+        })
     });
+
 
     tr.appendChild(postd);
     tr.appendChild(nametd);
@@ -296,12 +315,18 @@ function showModal(title, content, object, season, raceResults) {
 
     // Close modal functionality
     const closeButton = document.querySelector(".modal .close");
-    closeButton.onclick = function () {
+    closeButton.onclick = () => {
         modal.style.display = "none";
     };
 
-    window.onclick = function (event) {
-        if (event.target === modal) {
+    //Big button close at bottom
+    const bigCloseButton = document.querySelector(".modal .closeButton");
+    bigCloseButton.onclick = () => {
+        modal.style.display = "none";
+    }
+
+    window.onclick = e =>{
+        if (e.target === modal) {
             modal.style.display = "none";
         }
     };
