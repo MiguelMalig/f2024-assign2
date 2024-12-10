@@ -18,6 +18,12 @@
 }
 
 .results-section { min-height: 300px; }
+
+.table.table-sm.resulttable td {
+    padding-top: 3.5px;
+    padding-bottom: 3.5px;
+    line-height: 1;
+}
 .divider { border-right: 1px solid #ccc; }
 .table th, .table td { vertical-align: middle; }
 .table-container {
@@ -36,7 +42,7 @@
 }
 
 .racesTable{
-    padding: 2px
+    padding: 2px;
 }
 
 
