@@ -232,7 +232,7 @@ function displaySingleResult(result, results) {
                             <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
                             <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
                             <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
-                            <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
+                            <p><strong>URL:</strong> <a href=${data.url}>${data.url}</a></p>
                         </div>
                         </div>
                       </div>
@@ -422,7 +422,7 @@ function displaySingleQualifying(qualifying, qualifyingData) {
                                 <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
                                 <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
                                 <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
-                                <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
+                                <p><strong>URL:</strong> <a href=${data.url}>${data.url}</a></p>
                             </div>
                             </div>
                           </div>
