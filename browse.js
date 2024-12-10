@@ -190,54 +190,20 @@ function displaySingleResult(result, results) {
     lapstd.textContent = result.laps;
     pointstd.textContent = result.points;
 
+    tr.appendChild(postd);
+    tr.appendChild(nametd);
+    tr.appendChild(constructortd);
+    tr.appendChild(roundtd);
+    tr.appendChild(lapstd);
+    tr.appendChild(pointstd);
+
+    tbody.appendChild(tr);
+
     //Modal here
 
     nametd.addEventListener("click", (e) => {
         
         fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/drivers.php?ref=" + e.target.ref)
-            .then(response => {
-                if (response.ok) {
-                   return response.json();
-                }
-                else {
-                   return Promise.reject({
-                      status: response.status,
-                      statusText: response.statusText
-                   })
-                }
-             })
-             .then(data => {
-                showModal(
-                    `${data.forename} ${data.surname}`,
-                    `
-                   
-                     <div class="container-fluid">
-                        <div class="row">
-                            <!-- Image Column -->
-                            <div class="col-md-4">
-                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
-                            </div>
-                    <!-- Details Column -->
-                            <div class="col-md-6">
-                            <div class="driver-details">
-                                <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
-                                <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
-                                <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
-                                <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
-                            </div>
-                            </div>
-                          </div>
-                     </div>
-                    
-                    `, data, result.race.year, results 
-                ); 
-             })
-            
-    });
-
-    constructortd.addEventListener("click", (e) => {
-
-        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + e.target.ref)
         .then(response => {
             if (response.ok) {
                return response.json();
@@ -249,45 +215,35 @@ function displaySingleResult(result, results) {
                })
             }
          })
-        .then(data => {
-            fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructorResults.php?ref=" + e.target.ref + "&season=" + result.race.year)
-            .then(response => {
-                if (response.ok) {
-                   return response.json();
-                }
-                else {
-                   return Promise.reject({
-                      status: response.status,
-                      statusText: response.statusText
-                   })
-                }
-             })
-             .then(constructorHistory => {
+         .then(data => {
+            showModal(
+                `${data.forename} ${data.surname}`,
+                `
+               
+                 <div class="container-fluid">
+                    <div class="row">
+                        <!-- Image Column -->
+                        <div class="col-md-4">
+                        <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                        </div>
+                <!-- Details Column -->
+                        <div class="col-md-6">
+                        <div class="driver-details">
+                            <p><strong>Driver ID:</strong> <span>${data.driverId}</span></p>
+                            <p><strong>Date of Birth:</strong> <span>${data.dob}</span></p>
+                            <p><strong>Nationality:</strong> <span>${data.nationality}</span></p>
+                            <p><strong>URL:</strong> <a href=${data.url}</a>${data.url}</p>
+                        </div>
+                        </div>
+                      </div>
+                 </div>
                 
-                showModal(
-                    `Constructor Details`,
-                    `
-                    <h3>${data.name}</h3>
-                    <p><strong>Nationality:</strong> ${data.nationality}</p>
-                    <p><strong>URL:</strong> ${data.url}</p>
-                    `, result, result.race.year , constructorHistory
-                );
-             })
-        })
+                `, data, result.race.year, results 
+            ); 
+         })
     });
 
-
-    tr.appendChild(postd);
-    tr.appendChild(nametd);
-    tr.appendChild(constructortd);
-    tr.appendChild(roundtd);
-    tr.appendChild(lapstd);
-    tr.appendChild(pointstd);
-
-    tbody.appendChild(tr);
-    // result.addEventListener("click", (e) => {
-        
-    // })
+    constructortd.addEventListener("click", constructorModalContent(result.constructor.ref, result.race.year, result));
 }
 
 //Modal funtcion
@@ -300,7 +256,6 @@ function showModal(title, content, object, season, raceResults) {
     modalTitle.textContent = title;
     modalContent.innerHTML = content;
 
-    // Add race results.. I incorrectly put the array,
     if (modalTitle.textContent === "Constructor Details") {
         const divTable = document.createElement("div");
         divTable.classList.add("table-responsive-vertical");
@@ -321,7 +276,6 @@ function showModal(title, content, object, season, raceResults) {
 
         // Table body with results data
         raceResults.forEach(result => {
-            // if (result.constructor.ref === object.constructorRef && result.year === season) {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${result.round}</td>
@@ -331,7 +285,6 @@ function showModal(title, content, object, season, raceResults) {
                 `;
                 resultsTable.appendChild(row);
                 divTable.appendChild(resultsTable);
-            // }
         });
 
         modalContent.appendChild(divTable);
@@ -395,6 +348,7 @@ function showModal(title, content, object, season, raceResults) {
         modal.style.display = "none";
     }
 
+    //When outside of modal --> close modal
     window.onclick = e =>{
         if (e.target === modal) {
             modal.style.display = "none";
@@ -480,8 +434,12 @@ function displaySingleQualifying(qualifying, qualifyingData) {
             
     });
 
-    constructortd.addEventListener("click", (e) => {
-        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + e.target.ref)
+    constructortd.addEventListener("click", constructorModalContent(qualifying.constructor.ref,qualifying.race.year,qualifying));
+
+}
+function constructorModalContent(constructorRef,year,raceData){
+    return () => {
+        fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructors.php?ref=" + constructorRef)
         .then(response => {
             if (response.ok) {
                return response.json();
@@ -494,7 +452,7 @@ function displaySingleQualifying(qualifying, qualifyingData) {
             }
          })
         .then(data => {
-            fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructorResults.php?ref=" + e.target.ref + "&season=" + qualifying.race.year)
+            fetch ("https://www.randyconnolly.com/funwebdev/3rd/api/f1/constructorResults.php?ref=" + constructorRef + "&season=" + year)
             .then(response => {
                 if (response.ok) {
                    return response.json();
@@ -513,15 +471,32 @@ function displaySingleQualifying(qualifying, qualifyingData) {
                     <h3>${data.name}</h3>
                     <p><strong>Nationality:</strong> ${data.nationality}</p>
                     <p><strong>URL:</strong> ${data.url}</p>
-                    `, qualifying, qualifying.race.year , constructorHistory
+                    `, raceData, year , constructorHistory
                 );
              })
         })
-    });
-    // qualifying.addEventListener("click", (e) => {
-        
-    // })
 
+    }
+
+}
+function driverModalContent(driver){
+    return ` <div class="container-fluid">
+                        <div class="row">
+                            <!-- Image Column -->
+                            <div class="col-md-4">
+                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                            </div>
+                    <!-- Details Column -->
+                            <div class="col-md-6">
+                            <div class="driver-details">
+                                <p><strong>Driver ID:</strong> <span>${driver.driverId}</span></p>
+                                <p><strong>Date of Birth:</strong> <span>${driver.dob}</span></p>
+                                <p><strong>Nationality:</strong> <span>${driver.nationality}</span></p>
+                                <p><strong>URL:</strong> <a href=${driver.url}</a>${driver.url}</p>
+                            </div>
+                            </div>
+                          </div>
+                     </div>`;
 }
 function listRaces(e, season) {
     let seasonParagraph = document.querySelector(".leftside p");
@@ -758,41 +733,7 @@ function headerRaceData(e, results, qualifying) {
         // display table and headers for table corresponding to qualifying AND results.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
-        strong1.addEventListener("click", () => {
-            fetch("https://www.randyconnolly.com/funwebdev/3rd/api/f1/circuits.php?id=" + e.target.circuitID)
-            .then(response => {
-                if (response.ok) {
-                   return response.json();
-                }
-                else {
-                   return Promise.reject({
-                      status: response.status,
-                      statusText: response.statusText
-                   })
-                }
-             })
-            .then(data => {
-                showModal(
-                    "Circuit Details",
-                    `
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!-- Image Column -->
-                            <div class="col-md-4">
-                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
-                            </div>
-                    <!-- Details Column -->
-                            <div class="col-md-6">
-                                           <h3>${data.name}</h3>
-                    <p><strong>Location:</strong> ${data.location}</p>
-                    <p><strong>Country:</strong> ${data.country}</p>
-                    <p><strong>URL:</strong> ${data.url}</p>
-                          </div>
-                     </div>
-                    `, e
-                );
-            })
-        })
+        strong1.addEventListener("click", circuitModalContent(e));
     }
     else {
         
@@ -818,40 +759,44 @@ function headerRaceData(e, results, qualifying) {
         // display table and headers for table corresponding to qualifying AND.
         qualifyingHeaderTable(qualifying, e);
         resultsHeaderTable(results, e);
-        strong1.addEventListener("click", () => {
-            fetch("https://www.randyconnolly.com/funwebdev/3rd/api/f1/circuits.php?id=" + e.target.circuitID)
-            .then(response => {
-                if (response.ok) {
-                   return response.json();
-                }
-                else {
-                   return Promise.reject({
-                      status: response.status,
-                      statusText: response.statusText
-                   })
-                }
-             })
-            .then(data => {
-                showModal(
-                    "Circuit Details",
-                    `
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!-- Image Column -->
-                            <div class="col-md-4">
-                            <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
-                            </div>
-                    <!-- Details Column -->
-                            <div class="col-md-6">
-                                           <h3>${data.name}</h3>
-                    <p><strong>Location:</strong> ${data.location}</p>
-                    <p><strong>Country:</strong> ${data.country}</p>
-                    <p><strong>URL:</strong> ${data.url}</p>
-                          </div>
-                     </div>
-                    `, e
-                );
-            })
+        strong1.addEventListener("click", circuitModalContent(e));
+    }
+}
+
+function circuitModalContent(e){
+    return () =>{
+        fetch("https://www.randyconnolly.com/funwebdev/3rd/api/f1/circuits.php?id=" + e.target.circuitID)
+        .then(response => {
+            if (response.ok) {
+               return response.json();
+            }
+            else {
+               return Promise.reject({
+                  status: response.status,
+                  statusText: response.statusText
+               })
+            }
+         })
+        .then(data => {
+            showModal(
+                "Circuit Details",
+                `
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Image Column -->
+                        <div class="col-md-4">
+                        <img src="https://placehold.co/300x300" alt="place holder" class="img-fluid"> 
+                        </div>
+                <!-- Details Column -->
+                        <div class="col-md-6">
+                                       <h3>${data.name}</h3>
+                <p><strong>Location:</strong> ${data.location}</p>
+                <p><strong>Country:</strong> ${data.country}</p>
+                <p><strong>URL:</strong> ${data.url}</p>
+                      </div>
+                 </div>
+                `, e
+            );
         })
     }
 }
